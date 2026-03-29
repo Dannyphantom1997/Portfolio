@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sascha Thompson — Videographer &amp; Developer</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=2">
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -23,6 +23,23 @@
 
     <!-- HERO -->
     <section id="hero">
+
+      <!-- MOBILE HAMBURGER -->
+      <button class="hamburger-btn" id="hamburgerBtn" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+
+      <!-- MOBILE FULL-SCREEN MENU -->
+      <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
+        <button class="mobile-menu__close" id="mobileMenuClose" aria-label="Close menu">✕</button>
+        <nav>
+          <a href="#work"    class="mobile-menu__link" id="mobileMenuLink">Work</a>
+          <a href="#code"    class="mobile-menu__link" id="mobileMenuLink">Code</a>
+          <a href="#about"   class="mobile-menu__link" id="mobileMenuLink">About</a>
+          <a href="#contact" class="mobile-menu__link" id="mobileMenuLink">Contact</a>
+        </nav>
+      </div>
+
       <div class="hero__inner">
         <div class="hero__top">
           <h1 class="hero__name">Sascha<br>Thompson</h1>
@@ -33,7 +50,7 @@
             <a href="#contact" class="accordion__panel"><span class="accordion__label">Contact</span></a>
           </nav>
         </div>
-        <p class="hero__descriptor">Videographer &amp; Aspiring Front-End Developer — Calgary, AB</p>
+        <p class="hero__descriptor">Videographer &amp; Front-End Developer — Calgary, AB</p>
       </div>
     </section>
 
@@ -157,13 +174,16 @@
 
           <article class="card card--code">
             <div class="card__meta">
-              <div class="card__title-row">
-                <h3 class="card__title">Project Coming Soon</h3>
-                <div class="bouncing-dots" aria-hidden="true">
-                  <span class="dot"></span>
-                  <span class="dot"></span>
-                  <span class="dot"></span>
-                </div>
+              <h3 class="card__title">Portfolio</h3>
+              <div class="card__tags">
+                <span class="tag">HTML</span>
+                <span class="tag">CSS</span>
+                <span class="tag">JavaScript</span>
+              </div>
+              <p class="card__desc">My own personal portfolio page — frontend and backend setup built entirely by me.</p>
+              <div class="card__links">
+                <a href="https://saschathompson.com" target="_blank" rel="noopener noreferrer" class="card__link">Live Site</a>
+                <a href="https://github.com/Dannyphantom1997/Portfolio" target="_blank" rel="noopener noreferrer" class="card__link">GitHub</a>
               </div>
             </div>
           </article>
@@ -272,7 +292,7 @@
                 <span class="tg-corner tg-corner--tr" aria-hidden="true"></span>
                 <span class="tg-corner tg-corner--bl" aria-hidden="true"></span>
                 <span class="tg-corner tg-corner--br" aria-hidden="true"></span>
-                  <canvas id="tetrisCanvas" width="200" height="400"></canvas>
+                  <canvas id="tetrisCanvas"></canvas>
                 </div>
                 <div class="tetris-panel">
                   <div class="tetris-stats">
