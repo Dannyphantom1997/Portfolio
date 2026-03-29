@@ -782,6 +782,7 @@ section {
 
 .contact-left {
   flex: 1;
+  min-width: 0;
 }
 
 .contact-right {
@@ -1448,8 +1449,3 @@ section {
   }
 }
 
-/* TEMP DEBUG — remove after mobile test */
-.nav__accordion {
-  display: none !important;
-  background: red !important;
-}
