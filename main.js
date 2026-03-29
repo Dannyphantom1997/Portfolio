@@ -249,6 +249,36 @@
 
 
 /* ============================================================
+   HAMBURGER MENU — MOBILE ONLY
+   ============================================================ */
+
+(function () {
+  var btn   = document.getElementById('hamburgerBtn');
+  var menu  = document.getElementById('mobileMenu');
+  var close = document.getElementById('mobileMenuClose');
+  if (!btn || !menu || !close) return;
+
+  btn.addEventListener('click', function () {
+    menu.classList.add('is-open');
+    menu.setAttribute('aria-hidden', 'false');
+  });
+
+  close.addEventListener('click', function () {
+    menu.classList.remove('is-open');
+    menu.setAttribute('aria-hidden', 'true');
+  });
+
+  // Close when a link is tapped
+  menu.querySelectorAll('.mobile-menu__link').forEach(function (link) {
+    link.addEventListener('click', function () {
+      menu.classList.remove('is-open');
+      menu.setAttribute('aria-hidden', 'true');
+    });
+  });
+}());
+
+
+/* ============================================================
    RESUME SCROLL REVEAL — PARALLAX + FADE IN/OUT + CARD FLIP
    ============================================================ */
 
@@ -480,9 +510,9 @@
 
 
 /* ============================================================
-   TETRIS EASTER EGG — inline beside Contact section
+   TETRIS PLACEHOLDER — removed, to be rebuilt
    ============================================================ */
-
+/*
 (function () {
   const canvas = document.getElementById('tetrisCanvas');
   if (!canvas) return;
@@ -490,7 +520,9 @@
 
   const COLS = 10;
   const ROWS = 20;
-  const CELL = 20;
+  const CELL = window.innerWidth < 768 ? 18 : 28;
+  canvas.width  = COLS * CELL;
+  canvas.height = ROWS * CELL;
 
   // All seven tetrominoes
   const SHAPES = [
@@ -753,6 +785,7 @@
 
   init();
 }());
+*/
 
 
 /* ============================================================
