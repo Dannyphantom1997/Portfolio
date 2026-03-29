@@ -1,0 +1,129 @@
+You are given a task to integrate an existing React component in the codebase
+
+The codebase should support:
+- shadcn project structure  
+- Tailwind CSS
+- Typescript
+
+If it doesn't, provide instructions on how to setup project via shadcn CLI, install Tailwind or Typescript.
+
+Determine the default path for components and styles. 
+If default path for components is not /components/ui, provide instructions on why it's important to create this folder
+Copy-paste this component to /components/ui folder:
+```tsx
+split-text.tsx
+"use client";
+
+import { useState } from "react";
+import { motion } from "framer-motion";
+import { cn } from "@/lib/utils";
+
+interface TextSplitProps {
+  children: string;
+  className?: string;
+  topClassName?: string;
+  bottomClassName?: string;
+  maxMove?: number;
+  falloff?: number;
+}
+
+export const TextSplit = ({
+  children,
+  className,
+  topClassName,
+  bottomClassName,
+  maxMove = 50,
+  falloff = 0.3,
+}: TextSplitProps) => {
+  const [hoverIndex, setHoverIndex] = useState<number | null>(null);
+
+  const getOffset = (index: number) => {
+    if (hoverIndex === null) return 0;
+    const distance = Math.abs(index - hoverIndex);
+    return Math.max(0, maxMove * (1 - distance * falloff));
+  };
+
+  return (
+    <div
+      className={cn("relative flex items-center justify-center ", className)}
+    >
+      {children.split("").map((char, index) => {
+        const offset = getOffset(index);
+        const displayChar = char === " " ? "\u00A0" : char;
+
+        return (
+          <div
+            key={`${char}-${index}`}
+            className="relative flex flex-col h-[1em] w-auto leading-none"
+            onMouseEnter={() => setHoverIndex(index)}
+            onMouseLeave={() => setHoverIndex(null)}
+          >
+            <motion.span
+              initial={false}
+              animate={{
+                y: `-${offset}%`,
+              }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+              className={cn("overflow-hidden", topClassName)}
+            >
+              {displayChar}
+            </motion.span>
+
+            <motion.span
+              initial={false}
+              animate={{
+                y: `${offset}%`,
+              }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+              className={cn("overflow-hidden", bottomClassName)}
+            >
+              <span className="block -translate-y-1/2">{displayChar}</span>
+            </motion.span>
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
+
+demo.tsx
+import { TextSplit } from "@/components/ui/split-text";
+
+const TextSplitFalloff = () => {
+  return (
+    <TextSplit
+      className="text-4xl font-medium text-zinc-900 dark:text-zinc-50"
+      maxMove={150}
+      falloff={0.1}
+    >
+      Cut through the silence
+    </TextSplit>
+  );
+};
+
+export default TextSplitFalloff;
+
+```
+
+Install NPM dependencies:
+```bash
+framer-motion
+```
+
+Implementation Guidelines
+ 1. Analyze the component structure and identify all required dependencies
+ 2. Review the component's argumens and state
+ 3. Identify any required context providers or hooks and install them
+ 4. Questions to Ask
+ - What data/props will be passed to this component?
+ - Are there any specific state management requirements?
+ - Are there any required assets (images, icons, etc.)?
+ - What is the expected responsive behavior?
+ - What is the best place to use this component in the app?
+
+Steps to integrate
+ 0. Copy paste all the code above in the correct directories
+ 1. Install external dependencies
+ 2. Fill image assets with Unsplash stock images you know exist
+ 3. Use lucide-react icons for svgs or logos if component requires them

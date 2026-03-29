@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sascha Thompson — Videographer &amp; Developer</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- SVG filter: recolours logo floaters to exact #f85a41 -->
+  <svg style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true" focusable="false">
+    <defs>
+      <filter id="logo-orange" color-interpolation-filters="sRGB" x="0" y="0" width="100%" height="100%">
+        <feFlood flood-color="#f85a41" result="flood"/>
+        <feComposite in="flood" in2="SourceAlpha" operator="in"/>
+      </filter>
+    </defs>
+  </svg>
+
+  <main>
+
+    <!-- HERO -->
+    <section id="hero">
+      <div class="hero__inner">
+        <div class="hero__top">
+          <h1 class="hero__name">Sascha<br>Thompson</h1>
+          <nav class="nav__accordion" role="navigation" aria-label="Site sections">
+            <a href="#work"    class="accordion__panel is-active"><span class="accordion__label">Work</span></a>
+            <a href="#code"    class="accordion__panel"><span class="accordion__label">Code</span></a>
+            <a href="#about"   class="accordion__panel"><span class="accordion__label">About</span></a>
+            <a href="#contact" class="accordion__panel"><span class="accordion__label">Contact</span></a>
+          </nav>
+        </div>
+        <p class="hero__descriptor">Videographer &amp; Aspiring Front-End Developer — Calgary, AB</p>
+      </div>
+    </section>
+
+    <!-- VIDEO WORK -->
+    <section id="work">
+      <div class="section__inner">
+        <div class="section__header">
+          <span class="label">Selected Work</span>
+          <h2>Video</h2>
+        </div>
+        <div class="card-grid">
+
+          <article class="card card--video">
+            <div class="card__thumb">
+              <video src="One%20Van,%20Endless%20Possibilities%20%EF%BD%9C%20The%20Gear%20Bus%E2%84%A2%20by%20Yama%20Vans%20(1).mp4" autoplay muted loop playsinline></video>
+            </div>
+            <div class="card__meta">
+              <div class="video-tags"><span class="video-tag">Commercial</span></div>
+              <h3 class="card__title">The Gear Bus</h3>
+              <span class="card__client">Yama Vans</span>
+            </div>
+          </article>
+
+          <article class="card card--video">
+            <div class="card__thumb">
+              <video src="SugarLash%20Pro%20BTS.mp4" autoplay muted loop playsinline></video>
+            </div>
+            <div class="card__meta">
+              <div class="video-tags"><span class="video-tag">Product</span></div>
+              <h3 class="card__title">SugarLash Pro BTS</h3>
+              <span class="card__client">SugarLash Pro</span>
+            </div>
+          </article>
+
+          <article class="card card--video">
+            <div class="card__thumb">
+              <video src="2024%20Equitable%20Employment%20Leadership%20Summit,%20in%20Celebration%20of%20the%2011th%20Annual%20Mayors%20Luncheon%20(1).mp4" autoplay muted loop playsinline></video>
+            </div>
+            <div class="card__meta">
+              <div class="video-tags"><span class="video-tag">Event</span></div>
+              <h3 class="card__title">Equitable Employment Leadership Summit</h3>
+              <span class="card__client">11th Annual Mayor's Luncheon</span>
+            </div>
+          </article>
+
+          <article class="card card--video">
+            <div class="card__thumb">
+              <video src="Front%20of%20the%20world.mp4" autoplay muted loop playsinline></video>
+            </div>
+            <div class="card__meta">
+              <div class="video-tags"><span class="video-tag">Documentary</span></div>
+              <h3 class="card__title">Front of the World</h3>
+              <span class="card__client">Personal Project</span>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- RESUME -->
+    <div class="resume__float">
+
+      <!-- LOGO FLOATERS -->
+      <div class="logo-floaters" aria-hidden="true">
+        <img class="logo-floater" src="Logos/Garmin_logo_2006.svg.png" alt="">
+        <img class="logo-floater" src="Logos/SportChek.png" alt="">
+        <img class="logo-floater" src="Logos/Run%20calgary.png" alt="">
+        <img class="logo-floater" src="Logos/Sait.png" alt="">
+        <img class="logo-floater" src="Logos/Sportsnet-Logo.wine.png" alt="">
+        <img class="logo-floater" src="Logos/2022_Winter_Olympics_official_logo-en.png" alt="">
+        <img class="logo-floater" src="Logos/GatewayLogoBWfakevector%20-%20Copy.png" alt="">
+      </div>
+
+      <div class="resume__scene">
+        <div class="resume__card">
+          <div class="resume__face resume__face--front">
+            <iframe
+              src="assets/Sascha_Thompson_Resume.pdf#toolbar=0&navpanes=0&scrollbar=0&view=Fit&page=1"
+              width="100%"
+              height="680"
+              scrolling="no"
+            ></iframe>
+          </div>
+          <div class="resume__face resume__face--back">
+            <iframe
+              src="assets/Sascha_Thompson_Resume.pdf#toolbar=0&navpanes=0&scrollbar=0&view=Fit&page=2"
+              width="100%"
+              height="680"
+              scrolling="no"
+            ></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CODING WORK -->
+    <section id="code">
+      <div class="section__inner">
+        <div class="section__header">
+          <span class="label">Selected Work</span>
+          <h2>Code</h2>
+        </div>
+        <div class="card-grid">
+
+          <article class="card card--code">
+            <div class="card__meta">
+              <h3 class="card__title">Mr.V Plus</h3>
+              <div class="card__tags">
+                <span class="tag">HTML</span>
+                <span class="tag">CSS</span>
+                <span class="tag">JavaScript</span>
+              </div>
+              <p class="card__desc">A full website build for Mr.V Plus — designed and developed from the ground up.</p>
+              <div class="card__links">
+                <a href="https://mrvplus.netlify.app" target="_blank" rel="noopener noreferrer" class="card__link">Live Site</a>
+                <a href="https://github.com/Dannyphantom1997/Mr.-V-Website-" target="_blank" rel="noopener noreferrer" class="card__link">GitHub</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="card card--code">
+            <div class="card__meta">
+              <div class="card__title-row">
+                <h3 class="card__title">Project Coming Soon</h3>
+                <div class="bouncing-dots" aria-hidden="true">
+                  <span class="dot"></span>
+                  <span class="dot"></span>
+                  <span class="dot"></span>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="card card--code">
+            <div class="card__meta">
+              <div class="card__title-row">
+                <h3 class="card__title">Project Coming Soon</h3>
+                <div class="bouncing-dots" aria-hidden="true">
+                  <span class="dot"></span>
+                  <span class="dot"></span>
+                  <span class="dot"></span>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="card card--code">
+            <div class="card__meta">
+              <div class="card__title-row">
+                <h3 class="card__title">Project Coming Soon</h3>
+                <div class="bouncing-dots" aria-hidden="true">
+                  <span class="dot"></span>
+                  <span class="dot"></span>
+                  <span class="dot"></span>
+                </div>
+              </div>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- POLAROID STRIP — zero-height overlay on the code/about seam -->
+    <div class="polaroid-strip" id="polaroidStrip">
+      <div class="polaroid-card"><img src="Photos/hobby-01.jpg" alt=""><span class="polaroid-caption"><span class="polaroid-caption__activity">"Overlanding"</span><span class="polaroid-caption__date">14.03.2025</span></span></div>
+      <div class="polaroid-card"><img src="Photos/hobby-02.jpg" alt=""><span class="polaroid-caption"><span class="polaroid-caption__activity">"Cave Crawling"</span><span class="polaroid-caption__date">22.01.2025</span></span></div>
+      <div class="polaroid-card"><img src="Photos/hobby-04.jpg" alt=""><span class="polaroid-caption"><span class="polaroid-caption__activity">"Skiing"</span><span class="polaroid-caption__date">08.02.2025</span></span></div>
+      <div class="polaroid-card"><img src="Photos/03.jpg" alt=""><span class="polaroid-caption"><span class="polaroid-caption__activity">"City Cycling"</span><span class="polaroid-caption__date">17.11.2024</span></span></div>
+      <div class="polaroid-card"><img src="Photos/06.jpg" alt=""><span class="polaroid-caption"><span class="polaroid-caption__activity">"On Set"</span><span class="polaroid-caption__date">29.12.2024</span></span></div>
+    </div>
+    <p class="polaroid-label">Field Notes</p>
+
+    <!-- ABOUT -->
+    <section id="about">
+      <div class="section__inner">
+        <div class="section__header">
+          <span class="label">About</span>
+          <h2>ME</h2>
+        </div>
+        <div class="about__body">
+          <div class="about__bio">
+            <p>Based in Calgary, I shoot commercial and documentary video, brand anthems, product launches, event coverage, short-form doc work. Over time I picked up coding on the side, self-taught, and it's become just as much a part of what I do.</p>
+            <p>The two disciplines overlap more than you'd think. Pacing, layout, visual hierarchy. The same instincts that go into editing a film go into writing code. I've spent a lot of time learning to actually read and understand what the code was doing before touching anything. I'm now intuitively working with AI to speed my processes, and learn even more about the possibilites of what coding can do.</p>
+            <p>Weekends are usually spent overlanding or on my bike. Mostly just an excuse to be somewhere with bad cell service and questionable road conditions. The further from civilization the better.... someone has to test Google Maps "limits."</p>
+          </div>
+          <div class="about__skills">
+            <div class="skills__group">
+              <span class="label">Video</span>
+              <ul>
+                <li>RED Komodo</li>
+                <li>Blackmagic 6K</li>
+                <li>DaVinci Resolve</li>
+                <li>Adobe Premiere Pro</li>
+                <li>After Effects</li>
+                <li>Colour grading</li>
+                <li>Audio post</li>
+              </ul>
+            </div>
+            <div class="skills__group">
+              <span class="label">Development</span>
+              <ul>
+                <li>HTML / CSS / JS</li>
+                <li>React / Next.js</li>
+                <li>Node.js</li>
+                <li>Git &amp; GitHub</li>
+                <li>Figma</li>
+                <li>Vercel / Cloudflare</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact">
+      <div class="section__inner">
+        <div class="contact-inner">
+
+
+          <div class="contact-left">
+            <div class="section__header">
+              <span class="label">Get in Touch</span>
+            </div>
+            <a href="mailto:hello@saschathompson.com" class="contact__email">hello@saschathompson.com</a>
+            <p class="ps-note" id="psNote" aria-label="P.S. Think you can beat my score? No pressure either way — the email works too."></p>
+          </div>
+
+          <div class="contact-right">
+            <div class="tetris-wrapper">
+              <div class="tetris-game">
+                <div class="tetris-canvas-col">
+                <span class="tg-corner tg-corner--tl" aria-hidden="true"></span>
+                <span class="tg-corner tg-corner--tr" aria-hidden="true"></span>
+                <span class="tg-corner tg-corner--bl" aria-hidden="true"></span>
+                <span class="tg-corner tg-corner--br" aria-hidden="true"></span>
+                  <canvas id="tetrisCanvas" width="200" height="400"></canvas>
+                </div>
+                <div class="tetris-panel">
+                  <div class="tetris-stats">
+                    <div class="tetris-stat">
+                      <span class="tetris-stat__label">Score</span>
+                      <span class="tetris-stat__value" id="tetrisScore">0</span>
+                    </div>
+                    <div class="tetris-stat">
+                      <span class="tetris-stat__label">Level</span>
+                      <span class="tetris-stat__value" id="tetrisLevel">1</span>
+                    </div>
+                    <div class="tetris-stat">
+                      <span class="tetris-stat__label">Lines</span>
+                      <span class="tetris-stat__value" id="tetrisLines">0</span>
+                    </div>
+                    <div class="tetris-stat">
+                      <span class="tetris-stat__label">Best</span>
+                      <span class="tetris-stat__value" id="tetrisBest">15,000</span>
+                    </div>
+                  </div>
+                  <div class="tetris-controls">
+                    <p>← → Move</p>
+                    <p>↑ Rotate</p>
+                    <p>↓ Soft drop</p>
+                    <p>Space Hard drop</p>
+                    <p>P Pause</p>
+                    <p>R Restart</p>
+                  </div>
+                </div>
+              </div>
+              <div class="tetris-touch" aria-label="Touch controls">
+                <button class="tetris-btn" id="tetrisLeft">←</button>
+                <button class="tetris-btn" id="tetrisUp">↑</button>
+                <button class="tetris-btn" id="tetrisDown">↓</button>
+                <button class="tetris-btn" id="tetrisRight">→</button>
+                <button class="tetris-btn" id="tetrisSpace">Space</button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer id="footer">
+    <div class="footer__content">
+      <div class="footer__left">
+        <ul class="footer__links">
+          <li><a href="https://www.linkedin.com/in/sascha-thompson-b87019123/" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
+          <li><a href="https://github.com/Dannyphantom1997/Mr.-V-Website-" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+          <li><a href="https://www.instagram.com/mensahsascha/" target="_blank" rel="noopener noreferrer">Instagram</a></li>
+        </ul>
+        <p class="footer__copyright">
+          <svg class="footer__copyright-icon" viewBox="0 0 80 80" aria-hidden="true">
+            <path fill-rule="evenodd" clip-rule="evenodd" fill="currentColor" d="M67.4307 11.5693C52.005 -3.85643 26.995 -3.85643 11.5693 11.5693C-3.85643 26.995 -3.85643 52.005 11.5693 67.4307C26.995 82.8564 52.005 82.8564 67.4307 67.4307C82.8564 52.005 82.8564 26.995 67.4307 11.5693ZM17.9332 17.9332C29.8442 6.02225 49.1558 6.02225 61.0668 17.9332C72.9777 29.8442 72.9777 49.1558 61.0668 61.0668C59.7316 62.4019 58.3035 63.5874 56.8032 64.6232L56.8241 64.6023C46.8657 54.6439 46.8657 38.4982 56.8241 28.5398L58.2383 27.1256L51.8744 20.7617L50.4602 22.1759C40.5018 32.1343 24.3561 32.1343 14.3977 22.1759L14.3768 22.1968C15.4126 20.6965 16.5981 19.2684 17.9332 17.9332ZM34.0282 38.6078C25.6372 38.9948 17.1318 36.3344 10.3131 30.6265C7.56889 39.6809 9.12599 49.76 14.9844 57.6517L34.0282 38.6078ZM21.3483 64.0156C29.24 69.874 39.3191 71.4311 48.3735 68.6869C42.6656 61.8682 40.0052 53.3628 40.3922 44.9718L21.3483 64.0156Z"/>
+          </svg>
+          Sascha Thompson 2025. All Rights Reserved
+        </p>
+      </div>
+      <div class="footer__right">
+        <ul class="footer__links">
+          <li><a href="#work">Work</a></li>
+          <li><a href="#code">Code</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+        <div class="footer__back-top">
+          <button class="footer__back-btn" onclick="window.scrollTo({top:0,behavior:'smooth'})">Back to top</button>
+        </div>
+      </div>
+    </div>
+    <div id="waveContainer" aria-hidden="true"></div>
+  </footer>
+
+  <script src="main.js"></script>
+</body>
+</html>
