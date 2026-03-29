@@ -214,6 +214,7 @@ p {
    ============================================================ */
 
 #hero {
+  position: relative;
   border-bottom: 1px solid var(--color-accent);
 }
 
@@ -538,6 +539,40 @@ section {
   border-color: #ede9e1;
 }
 
+
+/* ============================================================
+   CARD ANNOTATION
+   ============================================================ */
+
+.card--annotated {
+  overflow: visible;
+  position: relative;
+}
+
+.card__annotation {
+  position: absolute;
+  top: -1.1rem;
+  right: 1.2rem;
+  font-family: 'Caveat', cursive;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  transform: rotate(4deg);
+  pointer-events: none;
+  z-index: 2;
+  white-space: nowrap;
+}
+
+.card__annotation::after {
+  content: '';
+  display: block;
+  height: 2px;
+  background: #1a1a1a;
+  border-radius: 1px;
+  margin-top: 1px;
+  transform: rotate(-1deg);
+  opacity: 0.5;
+}
 
 /* ============================================================
    BOUNCING DOTS
@@ -1075,6 +1110,12 @@ section {
 }
 
 
+/* Hide mobile-only elements on desktop */
+.hamburger-btn,
+.mobile-menu {
+  display: none;
+}
+
 /* ============================================================
    MOBILE BREAKPOINT — 768px
    ============================================================ */
@@ -1122,34 +1163,113 @@ section {
   .resume__float {
     min-height: auto;
     padding: 3rem var(--space-side-padding);
+    overflow: hidden !important;
+    max-width: 100% !important;
   }
 
   .resume__scene {
     position: relative;
     top: auto;
     margin-top: 0;
+    max-width: 100% !important;
+    perspective: none !important;
+    overflow: hidden !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    padding: 0 16px !important;
   }
 
   .resume__card {
     transform: none !important;
+    transform-style: flat !important;
+  }
+
+  .resume__face {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15) !important;
   }
 
   .resume__face--back {
-    display: none;
+    display: none !important;
   }
 
   .resume__face iframe {
+    width: 100% !important;
     height: 500px;
   }
 
-  /* Accordion — mobile */
-  .accordion__panel {
-    width: 36px;
-    height: 200px;
+  body {
+    overflow-x: hidden;
   }
 
-  .accordion__panel.is-active {
-    width: 120px;
+  /* Accordion — hidden on mobile, replaced by hamburger */
+  .nav__accordion {
+    display: none !important;
+  }
+
+  #hero {
+    overflow: hidden;
+  }
+
+  /* Hamburger button */
+  .hamburger-btn {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 1.25rem;
+    right: 1.25rem;
+    width: 40px;
+    height: 40px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    z-index: 200;
+    padding: 0;
+  }
+  .hamburger-btn span {
+    display: block;
+    width: 26px;
+    height: 2px;
+    background: #f85a41;
+    border-radius: 2px;
+  }
+
+  /* Mobile full-screen menu */
+  .mobile-menu {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: #ede9e1;
+    z-index: 300;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .mobile-menu.is-open {
+    display: flex;
+  }
+  .mobile-menu__close {
+    position: absolute;
+    top: 1.25rem;
+    right: 1.25rem;
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #f85a41;
+    cursor: pointer;
+    font-weight: 700;
+    line-height: 1;
+  }
+  .mobile-menu__link {
+    font-size: 32px;
+    font-weight: 700;
+    color: #f85a41;
+    text-decoration: none;
+    padding: 20px 0;
+    display: block;
+    text-align: center;
   }
 
   /* Hero */
@@ -1159,6 +1279,11 @@ section {
 
   .hero__top {
     margin-bottom: 1.5rem;
+  }
+
+  .hero__name {
+    font-size: clamp(48px, 12vw, 6.67vw);
+    width: 100%;
   }
 
   .hero__descriptor {
@@ -1231,15 +1356,23 @@ section {
   /* Contact */
   #contact .section__inner {
     padding-bottom: 4rem;
+    overflow: hidden;
+    max-width: 100vw;
   }
 
   .contact-inner {
     flex-direction: column;
   }
 
-
   .contact-right {
     width: 100%;
+    overflow: hidden;
+  }
+
+  .tetris-wrapper {
+    overflow: hidden;
+    width: 100%;
+    max-width: 100vw;
   }
 
   .contact__email {
@@ -1254,13 +1387,47 @@ section {
 
   /* Tetris mobile */
   .tetris-game {
-    transform: scale(0.75);
-    transform-origin: top left;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    transform: none;
+  }
+
+  .tetris-panel {
+    width: 100%;
+    height: auto;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .tetris-stats {
+    flex-direction: row;
+    gap: 24px;
+    justify-content: center;
+  }
+
+  .tetris-controls {
+    font-size: 11px;
+    color: #888880;
+    text-align: center;
+    opacity: 1;
   }
 
   .tetris-touch {
     display: flex;
-    margin-top: 8px;
+    position: static;
+    width: 100%;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 16px;
+  }
+
+  .tetris-btn {
+    width: 56px;
+    height: 56px;
+    font-size: 20px;
+    padding: 0;
+    border-radius: 8px;
   }
 
   /* Footer */
@@ -1279,4 +1446,10 @@ section {
   .footer__links {
     gap: 1rem;
   }
+}
+
+/* TEMP DEBUG — remove after mobile test */
+.nav__accordion {
+  display: none !important;
+  background: red !important;
 }
