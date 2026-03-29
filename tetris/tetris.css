@@ -1,0 +1,140 @@
+/* ============================================================
+   TETRIS — styles
+   Sits beside the Contact email section.
+   ============================================================ */
+
+.tetris-section {
+  display: flex;
+  flex-direction: row;
+  gap: 48px;
+  align-items: flex-start;
+}
+
+/* ── Game wrapper ─────────────────────────────────────── */
+.tetris-wrap {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 20px;
+  flex-shrink: 0;
+}
+
+/* ── Canvas ───────────────────────────────────────────── */
+#tetrisCanvas {
+  display: block;
+  /* width/height set explicitly so CSS display size always
+     matches the JS buffer size — no clipping, no distortion */
+  width: 240px;
+  height: 480px;
+  background: transparent;
+}
+
+/* ── Side panel (stats + controls) ───────────────────── */
+.t-panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 480px;
+  padding: 4px 0;
+}
+
+.t-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.t-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.t-stat__label {
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #f85a41;
+  opacity: 0.5;
+}
+
+.t-stat__value {
+  font-size: 18px;
+  line-height: 1;
+  font-weight: 700;
+  color: #f85a41;
+}
+
+.t-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  font-size: 10px;
+  color: #f85a41;
+  opacity: 0.55;
+  line-height: 1.5;
+}
+
+/* ── Touch buttons (mobile only) ─────────────────────── */
+.t-touch {
+  display: none;
+}
+
+/* ── Mobile ───────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .tetris-section {
+    flex-direction: column;
+    gap: 32px;
+  }
+
+  .tetris-wrap {
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+
+  #tetrisCanvas {
+    width: 160px;
+    height: 320px;
+  }
+
+  .t-panel {
+    width: 100%;
+    height: auto;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .t-stats {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+
+  .t-controls {
+    font-size: 11px;
+    opacity: 1;
+  }
+
+  .t-touch {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 12px;
+    width: 100%;
+  }
+
+  .t-btn {
+    background: #f85a41;
+    color: #ede9e1;
+    border: none;
+    width: 56px;
+    height: 56px;
+    font-size: 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    line-height: 1;
+  }
+}

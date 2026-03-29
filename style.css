@@ -741,13 +741,6 @@ section {
   padding-bottom: 8vw;
 }
 
-.contact-inner {
-  position: relative;
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  gap: 80px;
-}
 
 .ps-note {
   font-family: 'Caveat', cursive;
@@ -1240,10 +1233,6 @@ section {
     padding-bottom: 4rem;
     overflow-x: hidden;
     max-width: 100vw;
-  }
-
-  .contact-inner {
-    flex-direction: column;
   }
 
   .contact__email {

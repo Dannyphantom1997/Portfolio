@@ -4,7 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sascha Thompson — Videographer &amp; Developer</title>
-  <link rel="stylesheet" href="style.css?v=6">
+  <link rel="stylesheet" href="style.css?v=7">
+  <link rel="stylesheet" href="tetris/tetris.css">
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -274,9 +275,9 @@
     <!-- CONTACT -->
     <section id="contact">
       <div class="section__inner">
-        <div class="contact-inner">
+        <div class="tetris-section">
 
-
+          <!-- Left: email -->
           <div class="contact-left">
             <div class="section__header">
               <span class="label">Get in Touch</span>
@@ -285,6 +286,46 @@
             <p class="ps-note" id="psNote" aria-label="P.S. Think you can beat my score? No pressure either way — the email works too."></p>
           </div>
 
+          <!-- Right: Tetris -->
+          <div class="tetris-wrap">
+            <canvas id="tetrisCanvas"></canvas>
+            <div class="t-panel">
+              <div class="t-stats">
+                <div class="t-stat">
+                  <span class="t-stat__label">Score</span>
+                  <span class="t-stat__value" id="tScore">0</span>
+                </div>
+                <div class="t-stat">
+                  <span class="t-stat__label">Level</span>
+                  <span class="t-stat__value" id="tLevel">1</span>
+                </div>
+                <div class="t-stat">
+                  <span class="t-stat__label">Lines</span>
+                  <span class="t-stat__value" id="tLines">0</span>
+                </div>
+                <div class="t-stat">
+                  <span class="t-stat__label">Best</span>
+                  <span class="t-stat__value" id="tBest">0</span>
+                </div>
+              </div>
+              <div class="t-controls">
+                <p>← → Move</p>
+                <p>↑ Rotate</p>
+                <p>↓ Soft drop</p>
+                <p>Space Hard drop</p>
+                <p>P Pause</p>
+                <p>R Restart</p>
+              </div>
+            </div>
+            <!-- Touch controls (mobile) -->
+            <div class="t-touch">
+              <button class="t-btn" id="tLeft">←</button>
+              <button class="t-btn" id="tUp">↑</button>
+              <button class="t-btn" id="tDown">↓</button>
+              <button class="t-btn" id="tRight">→</button>
+              <button class="t-btn" id="tDrop">⬇</button>
+            </div>
+          </div>
 
         </div>
       </div>
@@ -324,5 +365,6 @@
   </footer>
 
   <script src="main.js"></script>
+  <script src="tetris/tetris.js"></script>
 </body>
 </html>
