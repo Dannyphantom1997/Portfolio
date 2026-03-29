@@ -1357,7 +1357,7 @@ section {
   /* Contact */
   #contact .section__inner {
     padding-bottom: 4rem;
-    overflow: hidden;
+    overflow-x: hidden;
     max-width: 100vw;
   }
 
@@ -1367,11 +1367,11 @@ section {
 
   .contact-right {
     width: 100%;
-    overflow: hidden;
+    overflow-x: hidden;
   }
 
   .tetris-wrapper {
-    overflow: hidden;
+    overflow-x: hidden;
     width: 100%;
     max-width: 100vw;
   }
