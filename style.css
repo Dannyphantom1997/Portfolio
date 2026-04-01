@@ -280,15 +280,6 @@ p {
   max-width: 38ch;
 }
 
-.fancy-word__outer {
-  display: inline-block;
-  transition: transform 0.35s cubic-bezier(0.76, 0, 0.24, 1);
-}
-
-.fancy-word__inner,
-.fancy-word__letter {
-  display: inline-block;
-}
 
 
 /* ============================================================
@@ -742,34 +733,88 @@ section {
 }
 
 
+.contact-right {
+  flex: 0 0 auto;
+  max-width: 280px;
+  display: flex;
+  align-items: flex-start;
+  padding-top: 2vw;
+  transform: translate(-100px, 150px) rotate(8deg);
+  transform-origin: top left;
+}
+
+.code-tetris-row {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  gap: calc(3vw + 60px);
+  margin-top: 2.5vw;
+}
+
+.code-peek {
+  flex: 0 0 auto;
+}
+
+
+.code-peek .label {
+  margin-bottom: 0.8vw;
+}
+
+.code-peek__block {
+  background: transparent;
+  color: var(--color-accent);
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.78rem;
+  font-weight: 700;
+  line-height: 1.65;
+  padding: 0;
+  overflow-x: auto;
+  margin: 0;
+  opacity: 0.9;
+}
+
+.code-peek__block code {
+  font-family: inherit;
+}
+
+@media (max-width: 768px) {
+  .code-tetris-row {
+    flex-direction: column;
+  }
+  .contact-right {
+    max-width: none;
+    padding-top: 0;
+  }
+  .code-peek__block {
+    font-size: 0.7rem;
+  }
+}
+
 .ps-note {
   font-family: 'Caveat', cursive;
-  font-size: 1.4rem;
-  font-weight: 700;
-  color: #1a1a1a;
-  margin-top: 1.5rem;
-  max-width: 480px;
-  white-space: pre-wrap;
+  font-size: 1.9rem;
+  font-weight: 600;
   line-height: 1.5;
-  min-height: 3em;
+  color: var(--color-dark);
+  margin: 0;
 }
 
-.ps-note .ps-line {
+.ps-draw {
   display: block;
   clip-path: inset(0 100% 0 0);
+  will-change: clip-path;
 }
 
-.ps-note.ps-draw .ps-line-1 {
-  animation: ps-draw-on 4s cubic-bezier(0.2, 0, 0.6, 1) forwards;
+.ps-note.is-drawing .ps-draw {
+  animation: ps-draw-on 1.1s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
 }
 
-.ps-note.ps-draw .ps-line-2 {
-  animation: ps-draw-on 2.8s cubic-bezier(0.2, 0, 0.6, 1) 4s forwards;
-}
+.ps-note.is-drawing .ps-draw:nth-child(2) { animation-delay: 0.7s;  }
+.ps-note.is-drawing .ps-draw:nth-child(3) { animation-delay: 1.45s; }
+.ps-note.is-drawing .ps-draw:nth-child(4) { animation-delay: 2.2s;  }
 
 @keyframes ps-draw-on {
-  from { clip-path: inset(0 100% 0 0); }
-  to   { clip-path: inset(0 0%   0 0); }
+  to { clip-path: inset(0 0% 0 0); }
 }
 
 
@@ -914,6 +959,16 @@ section {
   z-index: 10;
 }
 
+.resume__side-label {
+  position: absolute;
+  left: var(--space-side-padding);
+  top: 2vw;
+}
+
+.resume__side-label h2 {
+  color: var(--color-accent);
+}
+
 .resume__scene {
   position: sticky;
   top: calc(50vh - 380px);
@@ -1040,6 +1095,10 @@ section {
     padding: 3rem var(--space-side-padding);
     overflow: hidden !important;
     max-width: 100% !important;
+  }
+
+  .resume__side-label {
+    display: none;
   }
 
   .resume__scene {

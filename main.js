@@ -62,6 +62,26 @@
     ['Sascha', 'Thompson'].forEach(function (word) {
       buildSplitLine(word, hero);
     });
+
+    // Entrance animation — letters cascade up on load
+    var allChars = Array.from(hero.querySelectorAll('.split-char'));
+    allChars.forEach(function (char) {
+      char.style.opacity   = '0';
+      char.style.transform = 'translateY(24px)';
+    });
+
+    // Double rAF ensures initial state is painted before transition starts
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        allChars.forEach(function (char, i) {
+          var delay = i * 45;
+          char.style.transition = 'opacity 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) ' + delay + 'ms, '
+                                + 'transform 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) ' + delay + 'ms';
+          char.style.opacity   = '1';
+          char.style.transform = 'translateY(0)';
+        });
+      });
+    });
   }
 
   // Section headings — single line each
@@ -76,90 +96,57 @@
 
 
 /* ============================================================
-   HERO DESCRIPTOR — SCATTER HOVER
+   HERO DESCRIPTOR — LETTER CASCADE
    ============================================================ */
 
 (function () {
-  var SCATTER = [
-    { x: -15, y:  60, r:   8 },
-    { x: -30, y:  30, r:   4 },
-    { x: -20, y:  40, r:  -6 },
-    { x:   0, y:   8, r:  -8 },
-    { x:   0, y: -20, r:   5 },
-    { x:   0, y:  20, r:  -3 },
-    { x:   0, y: -40, r:  -5 },
-    { x:   0, y:  15, r:  10 },
-    { x:  10, y: -30, r:   7 },
-    { x:  20, y:  50, r:  -9 },
-    { x: -10, y: -15, r:   3 },
-    { x:  15, y:  25, r:  -7 },
-    { x: -25, y: -35, r:   6 },
-    { x:   5, y:  45, r:  -4 },
-    { x:  -5, y: -50, r:   9 },
-    { x:  25, y:  10, r:  -2 },
-    { x: -20, y: -20, r:   5 },
-    { x:  30, y: -10, r:  -8 },
-    { x: -35, y:  35, r:   3 },
-    { x:  10, y:  60, r:  -6 },
-  ];
-
   var desc = document.querySelector('.hero__descriptor');
   if (!desc) return;
 
-  var text = desc.textContent;
+  var text  = desc.textContent;
   desc.innerHTML = '';
 
-  var outers = [];
+  var letters = [];
 
-  // Group chars by word inside nowrap spans — prevents mid-word line breaks
-  var words = text.split(' ');
-  words.forEach(function (word, wi) {
+  // Group chars by word in nowrap spans — prevents mid-word line breaks
+  text.split(' ').forEach(function (word, wi, words) {
     var wordSpan = document.createElement('span');
     wordSpan.style.whiteSpace = 'nowrap';
 
     word.split('').forEach(function (char) {
-      var outer  = document.createElement('span');
-      outer.className = 'fancy-word__outer';
-      var inner  = document.createElement('span');
-      inner.className = 'fancy-word__inner';
-      var letter = document.createElement('span');
-      letter.className   = 'fancy-word__letter';
-      letter.textContent = char;
-      inner.appendChild(letter);
-      outer.appendChild(inner);
-      wordSpan.appendChild(outer);
-      outers.push(outer);
+      var span = document.createElement('span');
+      span.style.display   = 'inline-block';
+      span.style.opacity   = '0';
+      span.style.transform = 'translateY(20px)';
+      span.textContent     = char;
+      wordSpan.appendChild(span);
+      letters.push(span);
     });
 
     desc.appendChild(wordSpan);
 
-    // Space between words (outside nowrap span so words can wrap normally)
     if (wi < words.length - 1) {
-      var spaceOuter = document.createElement('span');
-      spaceOuter.className = 'fancy-word__outer';
-      var spaceInner = document.createElement('span');
-      spaceInner.className = 'fancy-word__inner';
-      var spaceLetter = document.createElement('span');
-      spaceLetter.className = 'fancy-word__letter';
-      spaceLetter.textContent = '\u00A0';
-      spaceInner.appendChild(spaceLetter);
-      spaceOuter.appendChild(spaceInner);
-      desc.appendChild(spaceOuter);
-      outers.push(spaceOuter);
+      var space = document.createElement('span');
+      space.style.display   = 'inline-block';
+      space.style.opacity   = '0';
+      space.style.transform = 'translateY(20px)';
+      space.textContent     = '\u00A0';
+      desc.appendChild(space);
+      letters.push(space);
     }
   });
 
-  desc.addEventListener('mouseenter', function () {
-    outers.forEach(function (outer, i) {
-      var t = SCATTER[i % SCATTER.length];
-      outer.style.transform =
-        'translateX(' + t.x + '%) translateY(' + t.y + '%) rotate(' + t.r + 'deg)';
-    });
-  });
-
-  desc.addEventListener('mouseleave', function () {
-    outers.forEach(function (outer) {
-      outer.style.transform = 'translateX(0) translateY(0) rotate(0deg)';
+  // Start after the name has begun — 500ms base delay, 35ms stagger per letter
+  var BASE_DELAY = 500;
+  requestAnimationFrame(function () {
+    requestAnimationFrame(function () {
+      letters.forEach(function (span, i) {
+        var delay = BASE_DELAY + i * 35;
+        span.style.transition = 'opacity 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) ' + delay + 'ms, '
+                              + 'transform 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) ' + delay + 'ms';
+        span.style.opacity   = '1';
+        span.style.transform = 'translateY(0)';
+      });
     });
   });
 }());
@@ -313,12 +300,26 @@
     scene.style.opacity = (Math.min(fadeIn, fadeOut)).toFixed(3);
 
     // ── PARALLAX: scene drifts ~60 px upward across the full section ─────────
-    // +30 px when entering  →  −30 px when exiting
     const parallaxY = (0.5 - progress) * 60;
-    scene.style.transform = `translateY(${parallaxY.toFixed(1)}px)`;
+
+    // ── ZOOM: in → hold through flip → out ───────────────────────────────────
+    const ZOOM_SCALE    = 1.3;
+    const ZOOM_IN_DIST  = 600;
+    const ZOOM_OUT_DIST = 400;
+    const flipStart     = sectionTop + vh * 0.65;
+    const flipEnd       = flipStart + FLIP_DISTANCE;
+    const zoomOutEnd    = flipEnd + ZOOM_OUT_DIST;
+
+    let scale;
+    if      (scrollY <= sectionTop)              { scale = 1; }
+    else if (scrollY <= sectionTop + ZOOM_IN_DIST) { scale = 1 + (ZOOM_SCALE - 1) * ((scrollY - sectionTop) / ZOOM_IN_DIST); }
+    else if (scrollY <= flipEnd)                 { scale = ZOOM_SCALE; }
+    else if (scrollY <= zoomOutEnd)              { scale = ZOOM_SCALE - (ZOOM_SCALE - 1) * ((scrollY - flipEnd) / ZOOM_OUT_DIST); }
+    else                                         { scale = 1; }
+
+    scene.style.transform = `translateY(${parallaxY.toFixed(1)}px) scale(${scale.toFixed(3)})`;
 
     // ── CARD FLIP: rotateY 0 → 180 over FLIP_DISTANCE px of scroll ──────────
-    const flipStart    = sectionTop + vh * 0.65;
     const flipProgress = Math.min(Math.max((scrollY - flipStart) / FLIP_DISTANCE, 0), 1);
     card.style.transform = `rotateY(${flipProgress * 180}deg)`;
   }
@@ -347,9 +348,6 @@
     { left: '88%', transform: 'translate(-50%, calc(-50% - 8px)) rotate(-6deg)'  },
   ];
 
-  // Allow pointer events on the cards themselves so hover works
-  cards.forEach(function (card) { card.style.pointerEvents = 'auto'; });
-
   function scatter() {
     cards.forEach(function (card, i) {
       card.style.left      = SCATTER[i].left;
@@ -366,43 +364,19 @@
     strip.classList.remove('is-scattered');
   }
 
-  // ---- HOVER ----
-  var hoverDebounce = null;
-  var isHovered     = false;
-
-  cards.forEach(function (card) {
-    card.addEventListener('mouseenter', function () {
-      isHovered = true;
-      clearTimeout(hoverDebounce);
-      scatter();
-    });
-    card.addEventListener('mouseleave', function () {
-      // Small debounce so moving between cards doesn't flicker
-      hoverDebounce = setTimeout(function () {
-        isHovered = false;
-        unscatter();
-      }, 150);
-    });
-  });
-
   // ---- AUTO LOOP ----
   // Last card: 0.48s delay + 1.3s duration ≈ 1.78s to fully settle
   var TRANSITION_SETTLE = 1800;
   var SCATTER_HOLD      = 2400;
   var STACK_HOLD        = 1000;
 
-  var looping     = false;
-  var loopTimeout = null;
+  var looping = false;
 
   function loop() {
-    if (isHovered) {
-      loopTimeout = setTimeout(loop, 500);
-      return;
-    }
     scatter();
-    loopTimeout = setTimeout(function () {
-      if (!isHovered) unscatter();
-      loopTimeout = setTimeout(function () {
+    setTimeout(function () {
+      unscatter();
+      setTimeout(function () {
         if (looping) loop();
       }, TRANSITION_SETTLE + STACK_HOLD);
     }, TRANSITION_SETTLE + SCATTER_HOLD);
@@ -788,24 +762,3 @@
 */
 
 
-/* ============================================================
-   P.S. NOTE — draw-on reveal
-   ============================================================ */
-
-(function () {
-  const psNote  = document.getElementById('psNote');
-  const section = document.getElementById('contact');
-  if (!psNote || !section) return;
-
-  psNote.innerHTML =
-    '<span class="ps-line ps-line-1">P.S. Think you can beat my score? No pressure either way \u2014</span>' +
-    '<span class="ps-line ps-line-2">the email works too.</span>';
-
-  const observer = new IntersectionObserver(function (entries) {
-    if (entries[0].isIntersecting) {
-      psNote.classList.add('ps-draw');
-      observer.disconnect();
-    }
-  }, { threshold: 0.25 });
-  observer.observe(section);
-}());

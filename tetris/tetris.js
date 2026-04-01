@@ -12,7 +12,7 @@
 
   // Cell size matches the CSS width/height set on the canvas
   // Desktop: 240px wide / 10 cols = 24px  |  Mobile: 160px / 10 cols = 16px
-  var CELL = window.innerWidth <= 768 ? 16 : 24;
+  var CELL = window.innerWidth <= 768 ? 16 : 18;
 
   canvas.width  = COLS * CELL;   // 240 desktop / 160 mobile
   canvas.height = ROWS * CELL;   // 480 desktop / 320 mobile
@@ -278,9 +278,26 @@
   });
 
   // ── Start ─────────────────────────────────────────────────
+  // Seed a minimum high score if nothing higher is saved
+  if (loadBest() < 16539) localStorage.setItem('tetris_best', 16539);
+
   // Show best score before first game
   var bestEl = document.getElementById('tBest');
   if (bestEl) bestEl.textContent = (loadBest() || 0).toLocaleString();
 
   init();
+
+  // Match Tetris height to the "Under the Hood" code section so their
+  // tops and bottoms align. Only runs on desktop where they sit side-by-side.
+  window.addEventListener('load', function () {
+    if (window.innerWidth <= 768) return;
+    var codePeek = document.querySelector('.code-peek');
+    if (!codePeek) return;
+    var targetH = codePeek.offsetHeight;
+    var aspectRatio = canvas.width / canvas.height; // 0.5
+    canvas.style.height = targetH + 'px';
+    canvas.style.width  = Math.round(targetH * aspectRatio) + 'px';
+    var panel = document.querySelector('.t-panel');
+    if (panel) panel.style.height = targetH + 'px';
+  });
 }());
