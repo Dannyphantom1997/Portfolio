@@ -230,7 +230,65 @@ p {
 }
 
 .hero__name {
+  position: relative;
   color: var(--color-accent);
+  cursor: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.magnetic-word {
+  display: block;
+}
+
+.magnetic-word__text {
+  display: block;
+}
+
+.magnetic-word__circle {
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 50%;
+  background: var(--color-accent);
+  overflow: hidden;
+  pointer-events: none;
+  width: 0;
+  height: 0;
+  transition: width 0.5s cubic-bezier(0.33, 1, 0.68, 1),
+              height 0.5s cubic-bezier(0.33, 1, 0.68, 1);
+  will-change: transform, width, height;
+}
+
+.magnetic-word__circle-inner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  will-change: transform;
+}
+
+.magnetic-word__hover-line {
+  font-size: var(--font-s-h1);
+  line-height: var(--font-lh-h1);
+  letter-spacing: var(--font-ls-h1);
+  font-weight: 700;
+  color: var(--color-bg);
+  white-space: nowrap;
+}
+
+.hero__hint {
+  font-family: 'Caveat', cursive;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--color-dark);
+  position: absolute;
+  bottom: calc(2.2vw + 400px);
+  left: var(--space-side-padding);
+  transform: rotate(-4deg);
+  opacity: 0.7;
 }
 
 .split-text-line {
@@ -634,6 +692,111 @@ section {
   border-top: 1px solid var(--color-accent);
 }
 
+/* ── CERTIFICATE CARD STACK ──────────────────────────────── */
+.cert-stack__container {
+  margin-top: 5rem;
+}
+
+.cert-stack__container > .label {
+  display: block;
+  margin-bottom: 2rem;
+}
+
+.cert-stage {
+  position: relative;
+  width: 100%;
+  height: 400px;
+  perspective: 1100px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.cert-card {
+  position: absolute;
+  bottom: 0;
+  width: 420px;
+  height: 280px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 3px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.14);
+  will-change: transform, opacity;
+  transition: transform 0.45s cubic-bezier(0.34, 1.2, 0.64, 1),
+              opacity 0.3s ease;
+  cursor: pointer;
+}
+
+.cert-card.is-active {
+  cursor: grab;
+}
+
+.cert-card.is-active:active {
+  cursor: grabbing;
+}
+
+.cert-card__iframe {
+  position: absolute;
+  inset: 0;
+  width: calc(100% + 20px); /* push PDF viewer's scrollbar off the right edge */
+  height: calc(100% + 20px);
+  border: none;
+  pointer-events: none;
+}
+
+.cert-card__mouse {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+}
+
+.cert-card__glare {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  border-radius: 10px;
+}
+
+.cert-card__footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 3;
+  padding: 10px 14px;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.6));
+  color: #fff;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.cert-stack__dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 1.5rem;
+}
+
+.cert-stack__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.2);
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.2s ease;
+}
+
+.cert-stack__dot.is-active {
+  background: var(--color-dark);
+}
+
 /* POLAROID STRIP — zero-height overlay on section seam */
 .polaroid-strip {
   position: relative;
@@ -1007,8 +1170,8 @@ section {
 }
 
 .resume__face iframe {
-  width: 100%;
-  height: 680px;
+  width: calc(100% + 20px); /* push PDF viewer's scrollbar off the right edge */
+  height: 700px; /* slightly taller to hide bottom scrollbar too */
   border: none;
   display: block;
   pointer-events: none;

@@ -55,35 +55,6 @@
     parentEl.appendChild(lineEl);
   }
 
-  // Hero name — two lines
-  var hero = document.querySelector('.hero__name');
-  if (hero) {
-    hero.innerHTML = '';
-    ['Sascha', 'Thompson'].forEach(function (word) {
-      buildSplitLine(word, hero);
-    });
-
-    // Entrance animation — letters cascade up on load
-    var allChars = Array.from(hero.querySelectorAll('.split-char'));
-    allChars.forEach(function (char) {
-      char.style.opacity   = '0';
-      char.style.transform = 'translateY(24px)';
-    });
-
-    // Double rAF ensures initial state is painted before transition starts
-    requestAnimationFrame(function () {
-      requestAnimationFrame(function () {
-        allChars.forEach(function (char, i) {
-          var delay = i * 45;
-          char.style.transition = 'opacity 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) ' + delay + 'ms, '
-                                + 'transform 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) ' + delay + 'ms';
-          char.style.opacity   = '1';
-          char.style.transform = 'translateY(0)';
-        });
-      });
-    });
-  }
-
   // Section headings — single line each
   ['#work h2', '#code h2', '#about h2'].forEach(function (selector) {
     var el = document.querySelector(selector);
@@ -91,6 +62,114 @@
     var text = el.textContent;
     el.innerHTML = '';
     buildSplitLine(text, el);
+  });
+}());
+
+
+/* ============================================================
+   MAGNETIC WORD — HERO NAME
+   ============================================================ */
+
+(function () {
+  var CIRCLE_SIZE = 250;
+
+  var hero = document.querySelector('.hero__name');
+  if (!hero) return;
+
+  var words = [
+    { text: 'Sascha',   hover: 'Videographer' },
+    { text: 'Thompson', hover: 'Front-End Dev' }
+  ];
+
+  hero.innerHTML = '';
+
+  // Build word rows + collect text span refs
+  var textSpans = [];
+  words.forEach(function (item) {
+    var row = document.createElement('div');
+    row.className = 'magnetic-word';
+
+    var span = document.createElement('span');
+    span.className   = 'magnetic-word__text';
+    span.textContent = item.text;
+    row.appendChild(span);
+
+    hero.appendChild(row);
+    textSpans.push(span);
+  });
+
+  // Single circle on the hero__name container
+  var circle = document.createElement('div');
+  circle.className = 'magnetic-word__circle';
+
+  var inner = document.createElement('div');
+  inner.className = 'magnetic-word__circle-inner';
+
+  words.forEach(function (item) {
+    var line = document.createElement('div');
+    line.className = 'magnetic-word__hover-line';
+    line.textContent = item.hover;
+    inner.appendChild(line);
+  });
+
+  circle.appendChild(inner);
+  hero.appendChild(circle);
+
+  var mousePos   = { x: 0, y: 0 };
+  var currentPos = { x: 0, y: 0 };
+
+  function lerp(a, b, t) { return a + (b - a) * t; }
+
+  var hitWidth = 0;
+  var isActive = false;
+
+  function updateSizes() {
+    inner.style.width  = window.innerWidth + 'px';
+    hitWidth = 0;
+    textSpans.forEach(function (s) {
+      hitWidth = Math.max(hitWidth, s.offsetWidth);
+    });
+    inner.style.height = hero.offsetHeight + 'px';
+  }
+
+  requestAnimationFrame(function () {
+    requestAnimationFrame(updateSizes);
+  });
+  window.addEventListener('resize', updateSizes);
+
+  function lerp(a, b, t) { return a + (b - a) * t; }
+
+  (function animate() {
+    currentPos.x = lerp(currentPos.x, mousePos.x, 0.15);
+    currentPos.y = lerp(currentPos.y, mousePos.y, 0.15);
+    circle.style.transform = 'translate(' + currentPos.x + 'px, ' + currentPos.y + 'px) translate(-50%, -50%)';
+    inner.style.transform  = 'translate(' + (-currentPos.x) + 'px, ' + (-currentPos.y) + 'px)';
+    requestAnimationFrame(animate);
+  }());
+
+  // Use window-level hit testing so the circle stays active across the full
+  // hover text width, not just the natural element width
+  window.addEventListener('mousemove', function (e) {
+    var rect = hero.getBoundingClientRect();
+    var x = e.clientX - rect.left;
+    var y = e.clientY - rect.top;
+    var inZone = x >= 0 && x <= hitWidth + 120 && y >= 0 && y <= rect.height;
+
+    if (inZone) {
+      mousePos.x = x;
+      mousePos.y = y;
+      if (!isActive) {
+        isActive = true;
+        currentPos.x = x;
+        currentPos.y = y;
+        circle.style.width  = CIRCLE_SIZE + 'px';
+        circle.style.height = CIRCLE_SIZE + 'px';
+      }
+    } else if (isActive) {
+      isActive = false;
+      circle.style.width  = '0';
+      circle.style.height = '0';
+    }
   });
 }());
 
@@ -762,3 +841,237 @@
 */
 
 
+/* ============================================================
+   CERTIFICATE CARD STACK
+   ============================================================ */
+
+(function () {
+  var stage  = document.getElementById('certStage');
+  var dotsEl = document.getElementById('certDots');
+  if (!stage || !dotsEl) return;
+
+  var CERTS = [
+    { title: 'Coursera — I',   src: 'Certificates/Coursera GHUQXCDUQVXF.pdf' },
+    { title: 'Coursera — II',  src: 'Certificates/Coursera JWEDX45FHD7Q.pdf' },
+    { title: 'Coursera — III', src: 'Certificates/Coursera KCHZMRDCYPQ3.pdf' },
+    { title: 'Coursera — IV',  src: 'Certificates/Coursera WTAZGFZLZZEU.pdf' },
+    { title: 'Credential',     src: 'Certificates/Sascha-Thompson-210f.pdf'   },
+    { title: 'Codecademy',     src: "Certificates/SaschaThompson's profile _ Codecademy.pdf" },
+  ];
+
+  var SPREAD_DEG    = 40;
+  var MAX_OFFSET    = 3;
+  var STEP_DEG      = SPREAD_DEG / MAX_OFFSET;   // 13.3 deg per card
+  var SPACING       = Math.round(420 * (1 - 0.48)); // ~218 px
+  var DEPTH_PX      = 100;
+  var TILT_X        = 10;
+  var LIFT_PX       = 22;
+  var SCALE_ON      = 1.03;
+  var SCALE_OFF     = 0.93;
+  var TILT_FACTOR   = 12;   // max mouse-tilt degrees (16.txt)
+  var GLARE_OPACITY = 0.35; // glare highlight strength (16.txt)
+  var LEN           = CERTS.length;
+
+  var active = 0;
+  var cards  = [];
+  var glares = [];
+  var dots   = [];
+  var autoId = null;
+  var tiltX  = 0;  // live mouse-tilt state for active card
+  var tiltY  = 0;
+
+  function wrap(n) { return ((n % LEN) + LEN) % LEN; }
+
+  function signedOff(i) {
+    var raw = i - active;
+    var alt = raw > 0 ? raw - LEN : raw + LEN;
+    return Math.abs(alt) < Math.abs(raw) ? alt : raw;
+  }
+
+  // ── Apply tilt transform to the active card only ───────────
+  // Called during mousemove — does NOT touch other cards or dots.
+  function applyTiltTransform() {
+    cards[active].style.transform =
+      'translateX(0px) ' +
+      'translateY(' + (-LIFT_PX) + 'px) ' +
+      'translateZ(0px) ' +
+      'rotateX(' + tiltX + 'deg) ' +
+      'rotateY(' + tiltY + 'deg) ' +
+      'rotateZ(0deg) ' +
+      'scale(' + SCALE_ON + ')';
+  }
+
+  // ── Build cards ────────────────────────────────────────────
+  CERTS.forEach(function (cert, i) {
+    var card = document.createElement('div');
+    card.className = 'cert-card';
+
+    var iframe = document.createElement('iframe');
+    iframe.className = 'cert-card__iframe';
+    iframe.src       = cert.src + '#toolbar=0&navpanes=0&scrollbar=0';
+    iframe.title     = cert.title;
+
+    // Glare overlay (16.txt) — sits between iframe and mouse layer
+    var glare = document.createElement('div');
+    glare.className = 'cert-card__glare';
+
+    var mouse = document.createElement('div');
+    mouse.className = 'cert-card__mouse';
+
+    var footer = document.createElement('div');
+    footer.className   = 'cert-card__footer';
+    footer.textContent = cert.title;
+
+    card.appendChild(iframe);
+    card.appendChild(glare);
+    card.appendChild(mouse);
+    card.appendChild(footer);
+    stage.appendChild(card);
+    cards.push(card);
+    glares.push(glare);
+
+    // Click non-active card → bring to front
+    mouse.addEventListener('click', function () {
+      if (i !== active) setActive(i);
+    });
+
+    // ── 16.txt: interactive tilt + glare on active card ───────
+    mouse.addEventListener('mouseenter', function () {
+      if (i !== active) return;
+      // Disable springy transition for instant mouse tracking
+      cards[i].style.transition = 'none';
+    });
+
+    mouse.addEventListener('mousemove', function (e) {
+      if (i !== active) return;
+      var rect = cards[i].getBoundingClientRect();
+      var nx   = (e.clientX - rect.left) / rect.width;   // 0..1
+      var ny   = (e.clientY - rect.top)  / rect.height;  // 0..1
+      tiltX    = -((ny - 0.5) * 2) * TILT_FACTOR;
+      tiltY    =  ((nx - 0.5) * 2) * TILT_FACTOR;
+      // Glare follows cursor (16.txt radial gradient)
+      glare.style.background =
+        'radial-gradient(circle at ' + (nx * 100).toFixed(1) + '% ' + (ny * 100).toFixed(1) + '%, ' +
+        'rgba(255,255,255,' + GLARE_OPACITY + ') 0%, rgba(255,255,255,0) 65%)';
+      glare.style.opacity = '1';
+      applyTiltTransform();
+    });
+
+    mouse.addEventListener('mouseleave', function () {
+      if (i !== active) return;
+      // Restore springy transition so snap-back is animated
+      cards[i].style.transition = '';
+      tiltX = 0;
+      tiltY = 0;
+      glare.style.opacity = '0';
+      applyTiltTransform();
+    });
+
+    // ── Drag on active card to navigate ───────────────────────
+    var dragStart = null;
+    mouse.addEventListener('mousedown', function (e) {
+      if (i !== active) return;
+      dragStart = e.clientX;
+    });
+    window.addEventListener('mouseup', function (e) {
+      if (dragStart === null || i !== active) { dragStart = null; return; }
+      var travel = e.clientX - dragStart;
+      dragStart = null;
+      if      (travel >  80) setActive(wrap(active - 1));
+      else if (travel < -80) setActive(wrap(active + 1));
+    });
+
+    // Touch swipe
+    var touchStart = null;
+    mouse.addEventListener('touchstart', function (e) {
+      if (i !== active) return;
+      touchStart = e.touches[0].clientX;
+    }, { passive: true });
+    mouse.addEventListener('touchend', function (e) {
+      if (touchStart === null || i !== active) { touchStart = null; return; }
+      var travel = e.changedTouches[0].clientX - touchStart;
+      touchStart = null;
+      if      (travel >  60) setActive(wrap(active - 1));
+      else if (travel < -60) setActive(wrap(active + 1));
+    });
+  });
+
+  // ── Build dots ─────────────────────────────────────────────
+  CERTS.forEach(function (_, i) {
+    var btn = document.createElement('button');
+    btn.className = 'cert-stack__dot';
+    btn.setAttribute('aria-label', 'Certificate ' + (i + 1));
+    btn.addEventListener('click', function () { setActive(i); });
+    dotsEl.appendChild(btn);
+    dots.push(btn);
+  });
+
+  // ── Layout ─────────────────────────────────────────────────
+  function layout() {
+    cards.forEach(function (card, i) {
+      var off  = signedOff(i);
+      var abs  = Math.abs(off);
+      var isOn = off === 0;
+
+      if (abs > MAX_OFFSET) {
+        card.style.opacity       = '0';
+        card.style.pointerEvents = 'none';
+        return;
+      }
+
+      card.style.opacity       = '1';
+      card.style.pointerEvents = '';
+      card.classList.toggle('is-active', isOn);
+      card.style.zIndex = String(100 - abs);
+
+      var x     = off * SPACING;
+      var y     = abs * 10 + (isOn ? -LIFT_PX : 0);
+      var z     = -abs * DEPTH_PX;
+      // Active card uses live mouse tilt; inactive cards use fixed tilt
+      var rotX  = isOn ? tiltX : TILT_X;
+      var rotY  = isOn ? tiltY : 0;
+      var rotZ  = off * STEP_DEG;
+      var scale = isOn ? SCALE_ON : SCALE_OFF;
+
+      card.style.transform =
+        'translateX(' + x + 'px) ' +
+        'translateY(' + y + 'px) ' +
+        'translateZ(' + z + 'px) ' +
+        'rotateX(' + rotX + 'deg) ' +
+        'rotateY(' + rotY + 'deg) ' +
+        'rotateZ(' + rotZ + 'deg) ' +
+        'scale(' + scale + ')';
+    });
+
+    dots.forEach(function (dot, i) {
+      dot.classList.toggle('is-active', i === active);
+    });
+  }
+
+  function setActive(i) {
+    // Clean up tilt/glare state from the outgoing active card
+    cards[active].style.transition = ''; // restore springy transition
+    glares[active].style.opacity   = '0';
+    tiltX = 0;
+    tiltY = 0;
+
+    active = wrap(i);
+    layout();
+  }
+
+  layout();
+
+  // ── Auto-advance ───────────────────────────────────────────
+  function startAuto() {
+    autoId = setInterval(function () { setActive(active + 1); }, 3000);
+  }
+  function stopAuto() {
+    clearInterval(autoId);
+  }
+
+  startAuto();
+  stage.addEventListener('mouseenter', stopAuto);
+  stage.addEventListener('mouseleave', startAuto);
+  dotsEl.addEventListener('mouseenter', stopAuto);
+  dotsEl.addEventListener('mouseleave', startAuto);
+}());

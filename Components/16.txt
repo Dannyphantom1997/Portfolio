@@ -1,0 +1,131 @@
+You are given a task to integrate an existing React component in the codebase
+
+The codebase should support:
+- shadcn project structure  
+- Tailwind CSS
+- Typescript
+
+If it doesn't, provide instructions on how to setup project via shadcn CLI, install Tailwind or Typescript.
+
+Determine the default path for components and styles. 
+If default path for components is not /components/ui, provide instructions on why it's important to create this folder
+Copy-paste this component to /components/ui folder:
+```tsx
+tilt-card.tsx
+import * as React from "react";
+import { motion } from "framer-motion";
+
+export function InteractiveTiltCard({
+    image = { src: "https://framerusercontent.com/images/YnBYRlxvxFzRXG9rOYVJdkGBg.jpg", alt: "Blue flower" },
+    tiltFactor = 15,
+    perspective = 1000,
+    borderRadius = 12,
+    backgroundColor = "#FFFFFF",
+    shadowColor = "rgba(0, 0, 0, 0.2)",
+    shadowIntensity = 0.5,
+    transitionDuration = 0.2,
+    hoverScale = 1.05,
+    glareEffect = true,
+    glareIntensity = 0.5,
+    glareSize = 80,
+}) {
+    const [isHovered, setIsHovered] = React.useState(false);
+    const [tiltValues, setTiltValues] = React.useState({ x: 0, y: 0 });
+    const [mousePosition, setMousePosition] = React.useState({ x: 0, y: 0 });
+    const cardRef = React.useRef(null);
+
+    const handleMouseMove = React.useCallback(
+        (e) => {
+            if (!cardRef.current || !isHovered) return;
+            const rect = cardRef.current.getBoundingClientRect();
+            const x = ((e.clientX - rect.left) / rect.width - 0.5) * 100;
+            const y = ((e.clientY - rect.top) / rect.height - 0.5) * 100;
+            setMousePosition({ x, y });
+            const tiltX = -(y / 50) * tiltFactor;
+            const tiltY = (x / 50) * tiltFactor;
+            setTiltValues({ x: tiltX, y: tiltY });
+        },
+        [isHovered, tiltFactor]
+    );
+
+    const handleMouseEnter = React.useCallback(() => setIsHovered(true), []);
+    const handleMouseLeave = React.useCallback(() => {
+        setIsHovered(false);
+        setTiltValues({ x: 0, y: 0 });
+    }, []);
+
+    const glareX = mousePosition.x / 2 + 50;
+    const glareY = mousePosition.y / 2 + 50;
+
+    return (
+        <motion.div ref={cardRef} style={{ position: "relative", width: "100%", height: "100%", perspective: `${perspective}px`, transformStyle: "preserve-3d", cursor: "pointer" }} animate={{ scale: isHovered ? hoverScale : 1 }} transition={{ duration: transitionDuration, ease: "easeOut" }} onMouseMove={handleMouseMove} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+            <motion.div style={{ position: "absolute", width: "100%", height: "100%", borderRadius: `${borderRadius}px`, overflow: "hidden", backgroundColor, transformStyle: "preserve-3d" }} animate={{ rotateX: tiltValues.x, rotateY: tiltValues.y, boxShadow: isHovered ? `0 25px 50px -12px rgba(0, 0, 0, ${shadowIntensity})` : `0 10px 30px -10px ${shadowColor}` }} transition={{ duration: transitionDuration, ease: "easeOut" }}>
+                <img src={image.src} alt={image.alt} style={{ width: "100%", height: "100%", objectFit: "cover", position: "relative", zIndex: 1 }}/>
+                {glareEffect && (<motion.div style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0, zIndex: 2, background: `radial-gradient(circle at ${glareX}% ${glareY}%, rgba(255, 255, 255, ${glareIntensity}) 0%, rgba(255, 255, 255, 0) ${glareSize}%)`, pointerEvents: "none" }} animate={{ opacity: isHovered ? 1 : 0 }} transition={{ duration: transitionDuration }}/>)}
+            </motion.div>
+        </motion.div>
+    );
+}
+
+demo.tsx
+// File: App.jsx (or your main entry file)
+
+import * as React from "react";
+// We ONLY import the pure component. No Framer dependencies here.
+import { InteractiveTiltCard } from "@/components/ui/tilt-card"; 
+
+// This is our Demo Container. It's like a Storybook story.
+// Its job is to create a fake environment to display the component.
+export default function TiltCardDemo() {
+    return (
+        // 1. A container to center the card and provide a background
+        <div
+            style={{
+                display: "grid",
+                placeItems: "center",
+                width: "100vw",
+                height: "100vh",
+                background: "linear-gradient(to bottom right, #2d3748, #1a202c)",
+            }}
+        >
+            {/* 2. A sized box to constrain our component */}
+            <div style={{ width: "300px", height: "400px" }}>
+                {/* 3. The Pure UI component with hardcoded props for the demo */}
+                <InteractiveTiltCard
+                    image={{
+                        src: "https://framerusercontent.com/images/n1lJP1YnTFEm9jTtkCsCLmxdmw.jpg",
+                        alt: "Blue flower in a vase",
+                    }}
+                    tiltFactor={20}
+                    hoverScale={1.07}
+                    shadowIntensity={0.6}
+                    glareEffect={true}
+                    glareIntensity={0.4}
+                />
+            </div>
+        </div>
+    );
+}
+```
+
+Install NPM dependencies:
+```bash
+framer-motion
+```
+
+Implementation Guidelines
+ 1. Analyze the component structure and identify all required dependencies
+ 2. Review the component's argumens and state
+ 3. Identify any required context providers or hooks and install them
+ 4. Questions to Ask
+ - What data/props will be passed to this component?
+ - Are there any specific state management requirements?
+ - Are there any required assets (images, icons, etc.)?
+ - What is the expected responsive behavior?
+ - What is the best place to use this component in the app?
+
+Steps to integrate
+ 0. Copy paste all the code above in the correct directories
+ 1. Install external dependencies
+ 2. Fill image assets with Unsplash stock images you know exist
+ 3. Use lucide-react icons for svgs or logos if component requires them
