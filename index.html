@@ -3,12 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Sascha Thompson — Videographer and Front-End Developer based in Calgary. Commercial video, documentary work, and self-taught web development.">
+  <meta property="og:title" content="Sascha Thompson — Videographer &amp; Developer">
+  <meta property="og:description" content="Commercial video, documentary work, and self-taught web development.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://saschathompson.com">
+  <link rel="icon" href="/favicon.ico">
   <title>Sascha Thompson — Videographer &amp; Developer</title>
   <link rel="stylesheet" href="style.css?v=7">
   <link rel="stylesheet" href="tetris/tetris.css">
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
+
+  <a class="skip-nav" href="#work">Skip to main content</a>
 
   <!-- SVG filter: recolours logo floaters to exact #f85a41 -->
   <svg style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true" focusable="false">
@@ -33,12 +41,31 @@
       <!-- MOBILE FULL-SCREEN MENU -->
       <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
         <button class="mobile-menu__close" id="mobileMenuClose" aria-label="Close menu">✕</button>
-        <nav>
-          <a href="#work"    class="mobile-menu__link" id="mobileMenuLink">Work</a>
-          <a href="#code"    class="mobile-menu__link" id="mobileMenuLink">Code</a>
-          <a href="#about"   class="mobile-menu__link" id="mobileMenuLink">About</a>
-          <a href="#contact" class="mobile-menu__link" id="mobileMenuLink">Contact</a>
+        <nav aria-label="Mobile site navigation">
+          <a href="#work"    class="mobile-menu__link">Work</a>
+          <a href="#code"    class="mobile-menu__link">Code</a>
+          <a href="#about"   class="mobile-menu__link">About</a>
+          <a href="#contact" class="mobile-menu__link">Contact</a>
         </nav>
+      </div>
+
+      <!-- MOBILE HERO SPLASH — hidden on desktop, replaces hero on mobile -->
+      <div class="mobile-hero-splash">
+        <h1 class="mobile-hero__name">Sascha<br>Thompson</h1>
+        <p class="mobile-hero__desc">Best experienced on desktop — built for wide screens and interaction.</p>
+        <div class="mobile-hero__brands">
+          <span class="label">Worked With</span>
+          <div class="mobile-hero__brand-grid">
+            <img src="images/logos/garmin.png" alt="Garmin" class="m-brand">
+            <img src="images/logos/sport-chek.png" alt="Sport Chek" class="m-brand">
+            <img src="images/logos/run-calgary.png" alt="Run Calgary" class="m-brand">
+            <img src="images/logos/sait.png" alt="SAIT" class="m-brand">
+            <img src="images/logos/sportsnet.png" alt="Sportsnet" class="m-brand">
+            <img src="images/logos/winter-olympics-2022.png" alt="2022 Winter Olympics" class="m-brand">
+            <img src="images/logos/gateway.png" alt="Gateway" class="m-brand">
+            <img src="images/logos/yama-vans.png" alt="Yama Vans" class="m-brand">
+          </div>
+        </div>
       </div>
 
       <div class="hero__inner">
@@ -66,7 +93,7 @@
 
           <article class="card card--video">
             <div class="card__thumb">
-              <iframe src="https://www.youtube.com/embed/Kvr3imjjoP4?autoplay=1&mute=1&loop=1&playlist=Kvr3imjjoP4&controls=0&modestbranding=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+              <iframe src="https://www.youtube.com/embed/Kvr3imjjoP4?autoplay=1&mute=1&loop=1&playlist=Kvr3imjjoP4&controls=0&modestbranding=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen title="The Gear Bus — Yama Vans commercial"></iframe>
             </div>
             <div class="card__meta">
               <div class="video-tags"><span class="video-tag">Commercial</span></div>
@@ -77,7 +104,7 @@
 
           <article class="card card--video">
             <div class="card__thumb">
-              <iframe src="https://www.youtube.com/embed/RnJG07ccHOQ?autoplay=1&mute=1&loop=1&playlist=RnJG07ccHOQ&controls=0&modestbranding=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+              <iframe src="https://www.youtube.com/embed/RnJG07ccHOQ?autoplay=1&mute=1&loop=1&playlist=RnJG07ccHOQ&controls=0&modestbranding=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen title="SugarLash Pro BTS — product video"></iframe>
             </div>
             <div class="card__meta">
               <div class="video-tags"><span class="video-tag">Product</span></div>
@@ -88,7 +115,7 @@
 
           <article class="card card--video">
             <div class="card__thumb">
-              <iframe src="https://www.youtube.com/embed/4LaRMs8V89Q?autoplay=1&mute=1&loop=1&playlist=4LaRMs8V89Q&controls=0&modestbranding=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+              <iframe src="https://www.youtube.com/embed/4LaRMs8V89Q?autoplay=1&mute=1&loop=1&playlist=4LaRMs8V89Q&controls=0&modestbranding=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen title="Front of the World — documentary"></iframe>
             </div>
             <div class="card__meta">
               <div class="video-tags"><span class="video-tag">Documentary</span></div>
@@ -99,7 +126,7 @@
 
           <article class="card card--video">
             <div class="card__thumb">
-              <iframe src="https://www.youtube.com/embed/y3DHIIXKQn4?autoplay=1&mute=1&loop=1&playlist=y3DHIIXKQn4&controls=0&modestbranding=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+              <iframe src="https://www.youtube.com/embed/y3DHIIXKQn4?autoplay=1&mute=1&loop=1&playlist=y3DHIIXKQn4&controls=0&modestbranding=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen title="Equitable Employment Leadership Summit — event video"></iframe>
             </div>
             <div class="card__meta">
               <div class="video-tags"><span class="video-tag">Event</span></div>
@@ -113,45 +140,47 @@
     </section>
 
     <!-- RESUME -->
-    <div class="resume__float">
+    <section class="resume__float" aria-labelledby="resume-heading">
 
       <div class="resume__side-label">
         <span class="label">Selected Work</span>
-        <h2>Resume</h2>
+        <h2 id="resume-heading">Resume</h2>
       </div>
 
       <!-- LOGO FLOATERS -->
       <div class="logo-floaters" aria-hidden="true">
-        <img class="logo-floater" src="Logos/Garmin_logo_2006.svg.png" alt="">
-        <img class="logo-floater" src="Logos/SportChek.png" alt="">
-        <img class="logo-floater" src="Logos/Run%20calgary.png" alt="">
-        <img class="logo-floater" src="Logos/Sait.png" alt="">
-        <img class="logo-floater" src="Logos/Sportsnet-Logo.wine.png" alt="">
-        <img class="logo-floater" src="Logos/2022_Winter_Olympics_official_logo-en.png" alt="">
-        <img class="logo-floater" src="Logos/GatewayLogoBWfakevector%20-%20Copy.png" alt="">
+        <img class="logo-floater" src="images/logos/garmin.png" alt="">
+        <img class="logo-floater" src="images/logos/sport-chek.png" alt="">
+        <img class="logo-floater" src="images/logos/run-calgary.png" alt="">
+        <img class="logo-floater" src="images/logos/sait.png" alt="">
+        <img class="logo-floater" src="images/logos/sportsnet.png" alt="">
+        <img class="logo-floater" src="images/logos/winter-olympics-2022.png" alt="">
+        <img class="logo-floater" src="images/logos/gateway.png" alt="">
       </div>
 
       <div class="resume__scene">
         <div class="resume__card">
           <div class="resume__face resume__face--front">
             <iframe
-              src="assets/Sascha_Thompson_Resume.pdf#toolbar=0&navpanes=0&scrollbar=0&view=Fit&page=1"
+              src="documents/resume/sascha-thompson-resume.pdf#toolbar=0&navpanes=0&scrollbar=0&view=Fit&page=1"
               width="100%"
               height="680"
               scrolling="no"
+              title="Sascha Thompson resume, page 1"
             ></iframe>
           </div>
           <div class="resume__face resume__face--back">
             <iframe
-              src="assets/Sascha_Thompson_Resume.pdf#toolbar=0&navpanes=0&scrollbar=0&view=Fit&page=2"
+              src="documents/resume/sascha-thompson-resume.pdf#toolbar=0&navpanes=0&scrollbar=0&view=Fit&page=2"
               width="100%"
               height="680"
               scrolling="no"
+              title="Sascha Thompson resume, page 2"
             ></iframe>
           </div>
         </div>
       </div>
-    </div>
+    </section>
 
     <!-- CODING WORK -->
     <section id="code">
@@ -227,11 +256,11 @@
 
     <!-- POLAROID STRIP — zero-height overlay on the code/about seam -->
     <div class="polaroid-strip" id="polaroidStrip">
-      <div class="polaroid-card"><img src="Photos/hobby-01.jpg" alt=""><span class="polaroid-caption"><span class="polaroid-caption__activity">"Overlanding"</span><span class="polaroid-caption__date">14.03.2025</span></span></div>
-      <div class="polaroid-card"><img src="Photos/hobby-02.jpg" alt=""><span class="polaroid-caption"><span class="polaroid-caption__activity">"Cave Crawling"</span><span class="polaroid-caption__date">22.01.2025</span></span></div>
-      <div class="polaroid-card"><img src="Photos/hobby-04.jpg" alt=""><span class="polaroid-caption"><span class="polaroid-caption__activity">"Skiing"</span><span class="polaroid-caption__date">08.02.2025</span></span></div>
-      <div class="polaroid-card"><img src="Photos/03.jpg" alt=""><span class="polaroid-caption"><span class="polaroid-caption__activity">"City Cycling"</span><span class="polaroid-caption__date">17.11.2024</span></span></div>
-      <div class="polaroid-card"><img src="Photos/06.jpg" alt=""><span class="polaroid-caption"><span class="polaroid-caption__activity">"On Set"</span><span class="polaroid-caption__date">29.12.2024</span></span></div>
+      <div class="polaroid-card"><img src="images/photos/overlanding.jpg" alt="Overlanding off-road trip, March 2025"><span class="polaroid-caption"><span class="polaroid-caption__activity">"Overlanding"</span><span class="polaroid-caption__date">14.03.2025</span></span></div>
+      <div class="polaroid-card"><img src="images/photos/cave-crawling.jpg" alt="Cave crawling adventure, January 2025"><span class="polaroid-caption"><span class="polaroid-caption__activity">"Cave Crawling"</span><span class="polaroid-caption__date">22.01.2025</span></span></div>
+      <div class="polaroid-card"><img src="images/photos/skiing.jpg" alt="Skiing in the mountains, February 2025"><span class="polaroid-caption"><span class="polaroid-caption__activity">"Skiing"</span><span class="polaroid-caption__date">08.02.2025</span></span></div>
+      <div class="polaroid-card"><img src="images/photos/city-cycling.jpg" alt="City cycling, November 2024"><span class="polaroid-caption"><span class="polaroid-caption__activity">"City Cycling"</span><span class="polaroid-caption__date">17.11.2024</span></span></div>
+      <div class="polaroid-card"><img src="images/photos/on-set.jpg" alt="On set during a video shoot, December 2024"><span class="polaroid-caption"><span class="polaroid-caption__activity">"On Set"</span><span class="polaroid-caption__date">29.12.2024</span></span></div>
     </div>
     <p class="polaroid-label">Field Notes</p>
 
@@ -356,11 +385,11 @@ function rotate(shape) {
               </div>
               <!-- Touch controls (mobile) -->
               <div class="t-touch">
-                <button class="t-btn" id="tLeft">←</button>
-                <button class="t-btn" id="tUp">↑</button>
-                <button class="t-btn" id="tDown">↓</button>
-                <button class="t-btn" id="tRight">→</button>
-                <button class="t-btn" id="tDrop">⬇</button>
+                <button class="t-btn" id="tLeft"  aria-label="Move left">←</button>
+                <button class="t-btn" id="tUp"    aria-label="Rotate">↑</button>
+                <button class="t-btn" id="tDown"  aria-label="Soft drop">↓</button>
+                <button class="t-btn" id="tRight" aria-label="Move right">→</button>
+                <button class="t-btn" id="tDrop"  aria-label="Hard drop">⬇</button>
               </div>
             </div>
             </div><!-- end .code-tetris-row -->
@@ -390,7 +419,7 @@ function rotate(shape) {
           <svg class="footer__copyright-icon" viewBox="0 0 80 80" aria-hidden="true">
             <path fill-rule="evenodd" clip-rule="evenodd" fill="currentColor" d="M67.4307 11.5693C52.005 -3.85643 26.995 -3.85643 11.5693 11.5693C-3.85643 26.995 -3.85643 52.005 11.5693 67.4307C26.995 82.8564 52.005 82.8564 67.4307 67.4307C82.8564 52.005 82.8564 26.995 67.4307 11.5693ZM17.9332 17.9332C29.8442 6.02225 49.1558 6.02225 61.0668 17.9332C72.9777 29.8442 72.9777 49.1558 61.0668 61.0668C59.7316 62.4019 58.3035 63.5874 56.8032 64.6232L56.8241 64.6023C46.8657 54.6439 46.8657 38.4982 56.8241 28.5398L58.2383 27.1256L51.8744 20.7617L50.4602 22.1759C40.5018 32.1343 24.3561 32.1343 14.3977 22.1759L14.3768 22.1968C15.4126 20.6965 16.5981 19.2684 17.9332 17.9332ZM34.0282 38.6078C25.6372 38.9948 17.1318 36.3344 10.3131 30.6265C7.56889 39.6809 9.12599 49.76 14.9844 57.6517L34.0282 38.6078ZM21.3483 64.0156C29.24 69.874 39.3191 71.4311 48.3735 68.6869C42.6656 61.8682 40.0052 53.3628 40.3922 44.9718L21.3483 64.0156Z"/>
           </svg>
-          Sascha Thompson 2025. All Rights Reserved
+          Sascha Thompson 2026. All Rights Reserved
         </p>
       </div>
       <div class="footer__right">
@@ -401,8 +430,11 @@ function rotate(shape) {
           <li><a href="#contact">Contact</a></li>
         </ul>
         <div class="footer__back-top">
-          <button class="footer__back-btn" onclick="window.scrollTo({top:0,behavior:'smooth'})">Back to top</button>
+          <button class="footer__back-btn">Back to top</button>
         </div>
+      </div>
+      <div class="footer__mobile-contact">
+        <a href="mailto:hello@saschathompson.com" class="footer__contact-btn">hello@saschathompson.com</a>
       </div>
     </div>
     <div id="waveContainer" aria-hidden="true"></div>

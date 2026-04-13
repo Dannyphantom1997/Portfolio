@@ -135,9 +135,11 @@
   requestAnimationFrame(function () {
     requestAnimationFrame(updateSizes);
   });
-  window.addEventListener('resize', updateSizes);
-
-  function lerp(a, b, t) { return a + (b - a) * t; }
+  var resizeTimer;
+  window.addEventListener('resize', function () {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(updateSizes, 150);
+  });
 
   (function animate() {
     currentPos.x = lerp(currentPos.x, mousePos.x, 0.15);
@@ -349,6 +351,8 @@
    ============================================================ */
 
 (function () {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
   const scene   = document.querySelector('.resume__scene');
   const card    = document.querySelector('.resume__card');
   const floatEl = document.querySelector('.resume__float');
@@ -413,6 +417,8 @@
    ============================================================ */
 
 (function () {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
   const strip = document.getElementById('polaroidStrip');
   if (!strip) return;
 
@@ -443,38 +449,73 @@
     strip.classList.remove('is-scattered');
   }
 
-  // ---- AUTO LOOP ----
-  // Last card: 0.48s delay + 1.3s duration ≈ 1.78s to fully settle
-  var TRANSITION_SETTLE = 1800;
-  var SCATTER_HOLD      = 2400;
-  var STACK_HOLD        = 1000;
-
-  var looping = false;
-
-  function loop() {
-    scatter();
-    setTimeout(function () {
-      unscatter();
-      setTimeout(function () {
-        if (looping) loop();
-      }, TRANSITION_SETTLE + STACK_HOLD);
-    }, TRANSITION_SETTLE + SCATTER_HOLD);
-  }
-
-  var triggered = false;
-
+  // ── Scroll-driven scatter ──────────────────────────────────
   function check() {
-    if (triggered) return;
-    var rect = strip.getBoundingClientRect();
-    if (rect.top < window.innerHeight - 80) {
-      triggered = true;
-      looping   = true;
-      loop();
-      window.removeEventListener('scroll', check);
+    var rect   = strip.getBoundingClientRect();
+    var inView = rect.top < window.innerHeight - 60 && rect.bottom > 60;
+    if (inView && !strip.classList.contains('is-scattered')) {
+      scatter();
+    } else if (!inView && strip.classList.contains('is-scattered')) {
+      unscatter();
     }
   }
 
   window.addEventListener('scroll', check, { passive: true });
+  check(); // run once on page load in case already in view
+
+  // ── Photo lightbox ─────────────────────────────────────────
+  var photoLightbox       = document.createElement('div');
+  photoLightbox.className = 'photo-lightbox';
+
+  var plImg               = document.createElement('img');
+  plImg.className         = 'photo-lightbox__img';
+  plImg.alt               = '';
+
+  var plCaption           = document.createElement('p');
+  plCaption.className     = 'photo-lightbox__caption';
+
+  var plClose             = document.createElement('button');
+  plClose.className       = 'photo-lightbox__close';
+  plClose.innerHTML       = '&#x2715;';
+  plClose.setAttribute('aria-label', 'Close');
+
+  photoLightbox.appendChild(plImg);
+  photoLightbox.appendChild(plCaption);
+  photoLightbox.appendChild(plClose);
+  document.body.appendChild(photoLightbox);
+
+  function openPhotoLightbox(card) {
+    var img    = card.querySelector('img');
+    var actEl  = card.querySelector('.polaroid-caption__activity');
+    var dateEl = card.querySelector('.polaroid-caption__date');
+    plImg.src  = img ? img.src : '';
+    plCaption.textContent = (actEl  ? actEl.textContent  : '') +
+                            (dateEl ? '  ·  ' + dateEl.textContent : '');
+    photoLightbox.classList.add('is-open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closePhotoLightbox() {
+    photoLightbox.classList.remove('is-open');
+    document.body.style.overflow = '';
+  }
+
+  plClose.addEventListener('click', function (e) {
+    e.stopPropagation();
+    closePhotoLightbox();
+  });
+  photoLightbox.addEventListener('click', function (e) {
+    if (e.target === photoLightbox || e.target === plImg) closePhotoLightbox();
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && photoLightbox.classList.contains('is-open')) closePhotoLightbox();
+  });
+
+  cards.forEach(function (card) {
+    card.addEventListener('click', function () {
+      if (strip.classList.contains('is-scattered')) openPhotoLightbox(card);
+    });
+  });
 }());
 
 
@@ -483,6 +524,8 @@
    ============================================================ */
 
 (function () {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
   const floatEl = document.querySelector('.resume__float');
   if (!floatEl) return;
 
@@ -562,283 +605,6 @@
 }());
 
 
-/* ============================================================
-   TETRIS PLACEHOLDER — removed, to be rebuilt
-   ============================================================ */
-/*
-(function () {
-  const canvas = document.getElementById('tetrisCanvas');
-  if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-
-  const COLS = 10;
-  const ROWS = 20;
-  const CELL = window.innerWidth < 768 ? 18 : 28;
-  canvas.width  = COLS * CELL;
-  canvas.height = ROWS * CELL;
-
-  // All seven tetrominoes
-  const SHAPES = [
-    [[0,0,0,0],[1,1,1,1],[0,0,0,0],[0,0,0,0]], // I
-    [[1,1],[1,1]],                               // O
-    [[0,1,0],[1,1,1],[0,0,0]],                  // T
-    [[0,1,1],[1,1,0],[0,0,0]],                  // S
-    [[1,1,0],[0,1,1],[0,0,0]],                  // Z
-    [[1,0,0],[1,1,1],[0,0,0]],                  // J
-    [[0,0,1],[1,1,1],[0,0,0]],                  // L
-  ];
-
-  let board, piece, score, level, lines, paused, over, dropInterval, dropCounter, lastTime, rafId;
-
-  function init() {
-    board        = Array.from({ length: ROWS }, () => Array(COLS).fill(0));
-    score        = 0;
-    level        = 1;
-    lines        = 0;
-    paused       = false;
-    over         = false;
-    dropInterval = 1000;
-    dropCounter  = 0;
-    lastTime     = 0;
-    piece        = spawn();
-    updateStats();
-    if (rafId) cancelAnimationFrame(rafId);
-    rafId = requestAnimationFrame(loop);
-  }
-
-  function spawn() {
-    const shape = SHAPES[Math.floor(Math.random() * SHAPES.length)];
-    return {
-      shape: shape,
-      x: Math.floor(COLS / 2) - Math.floor(shape[0].length / 2),
-      y: 0,
-    };
-  }
-
-  function rotate(shape) {
-    const rows = shape.length, cols = shape[0].length;
-    const out = Array.from({ length: cols }, () => Array(rows).fill(0));
-    for (let r = 0; r < rows; r++) {
-      for (let c = 0; c < cols; c++) {
-        out[c][rows - 1 - r] = shape[r][c];
-      }
-    }
-    return out;
-  }
-
-  function valid(shape, px, py) {
-    for (let r = 0; r < shape.length; r++) {
-      for (let c = 0; c < shape[r].length; c++) {
-        if (!shape[r][c]) continue;
-        const nx = px + c, ny = py + r;
-        if (nx < 0 || nx >= COLS || ny >= ROWS) return false;
-        if (ny >= 0 && board[ny][nx]) return false;
-      }
-    }
-    return true;
-  }
-
-  function place() {
-    for (let r = 0; r < piece.shape.length; r++) {
-      for (let c = 0; c < piece.shape[r].length; c++) {
-        if (!piece.shape[r][c]) continue;
-        const ny = piece.y + r, nx = piece.x + c;
-        if (ny < 0) { over = true; return; }
-        board[ny][nx] = 1;
-      }
-    }
-    clearLines();
-    piece = spawn();
-    if (!valid(piece.shape, piece.x, piece.y)) over = true;
-  }
-
-  function clearLines() {
-    const pts = [0, 100, 300, 500, 800];
-    let cleared = 0;
-    for (let r = ROWS - 1; r >= 0; r--) {
-      if (board[r].every(function (v) { return v !== 0; })) {
-        board.splice(r, 1);
-        board.unshift(Array(COLS).fill(0));
-        cleared++;
-        r++;
-      }
-    }
-    if (cleared) {
-      score += (pts[cleared] || 800) * level;
-      lines += cleared;
-      level  = Math.floor(lines / 10) + 1;
-      dropInterval = Math.max(100, 1000 - (level - 1) * 80);
-      updateStats();
-    }
-  }
-
-  var best = 15000;
-
-  function updateStats() {
-    var s  = document.getElementById('tetrisScore');
-    var lv = document.getElementById('tetrisLevel');
-    var ln = document.getElementById('tetrisLines');
-    var bs = document.getElementById('tetrisBest');
-    if (s)  s.textContent  = score;
-    if (lv) lv.textContent = level;
-    if (ln) ln.textContent = lines;
-    if (score > best) best = score;
-    if (bs) bs.textContent = best.toLocaleString();
-  }
-
-  function ghostY() {
-    var gy = piece.y;
-    while (valid(piece.shape, piece.x, gy + 1)) gy++;
-    return gy;
-  }
-
-  function draw() {
-    // Clear to page background colour
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    // Landed pieces — whole cells, no gaps
-    ctx.fillStyle = '#c4472f';
-    for (let r = 0; r < ROWS; r++) {
-      for (let c = 0; c < COLS; c++) {
-        if (board[r][c]) ctx.fillRect(c * CELL, r * CELL, CELL, CELL);
-      }
-    }
-
-    if (!over) {
-      // Ghost piece — outline only, no fill
-      const gy = ghostY();
-      ctx.strokeStyle = 'rgba(248,90,65,0.35)';
-      ctx.lineWidth = 1;
-      piece.shape.forEach(function (row, r) {
-        row.forEach(function (v, c) {
-          if (v) ctx.strokeRect((piece.x + c) * CELL + 0.5, (gy + r) * CELL + 0.5, CELL - 1, CELL - 1);
-        });
-      });
-
-      // Active piece — whole cells, no gaps
-      ctx.fillStyle = '#f85a41';
-      piece.shape.forEach(function (row, r) {
-        row.forEach(function (v, c) {
-          if (v) ctx.fillRect((piece.x + c) * CELL, (piece.y + r) * CELL, CELL, CELL);
-        });
-      });
-    }
-
-    // Pause overlay
-    if (paused) {
-      ctx.fillStyle = 'rgba(237,233,225,0.85)';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = '#f85a41';
-      ctx.font = 'bold 22px sans-serif';
-      ctx.textAlign = 'center';
-      ctx.fillText('PAUSED', canvas.width / 2, canvas.height / 2);
-    }
-
-    // Game over overlay
-    if (over) {
-      ctx.fillStyle = 'rgba(237,233,225,0.88)';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = '#f85a41';
-      ctx.font = 'bold 22px sans-serif';
-      ctx.textAlign = 'center';
-      ctx.fillText('GAME OVER', canvas.width / 2, canvas.height / 2 - 18);
-      ctx.font = '14px sans-serif';
-      ctx.fillStyle = 'rgba(248,90,65,0.7)';
-      ctx.fillText('Press R to restart', canvas.width / 2, canvas.height / 2 + 14);
-    }
-  }
-
-  function loop(time) {
-    const delta = time - lastTime;
-    lastTime = time;
-
-    if (!paused && !over) {
-      dropCounter += delta;
-      if (dropCounter >= dropInterval) {
-        dropCounter = 0;
-        if (valid(piece.shape, piece.x, piece.y + 1)) {
-          piece.y++;
-        } else {
-          place();
-        }
-      }
-    }
-
-    draw();
-    rafId = requestAnimationFrame(loop);
-  }
-
-  // ── Keyboard controls ─────────────────────────────────────────
-  document.addEventListener('keydown', function (e) {
-    if (!piece) return;
-    switch (e.code) {
-      case 'ArrowLeft':
-        if (!paused && !over && valid(piece.shape, piece.x - 1, piece.y)) piece.x--;
-        e.preventDefault(); break;
-      case 'ArrowRight':
-        if (!paused && !over && valid(piece.shape, piece.x + 1, piece.y)) piece.x++;
-        e.preventDefault(); break;
-      case 'ArrowDown':
-        if (!paused && !over && valid(piece.shape, piece.x, piece.y + 1)) {
-          piece.y++;
-          score += 1;
-          updateStats();
-        }
-        e.preventDefault(); break;
-      case 'ArrowUp':
-        if (!paused && !over) {
-          const rotated = rotate(piece.shape);
-          if (valid(rotated, piece.x, piece.y)) piece.shape = rotated;
-        }
-        e.preventDefault(); break;
-      case 'Space':
-        if (!paused && !over) {
-          while (valid(piece.shape, piece.x, piece.y + 1)) { piece.y++; score += 2; }
-          place();
-          updateStats();
-        }
-        e.preventDefault(); break;
-      case 'KeyP':
-        if (!over) paused = !paused;
-        break;
-      case 'KeyR':
-        init();
-        break;
-    }
-  });
-
-  // ── Touch / button controls ───────────────────────────────────
-  function bindBtn(id, action) {
-    const btn = document.getElementById(id);
-    if (!btn) return;
-    function fire(e) { e.preventDefault(); action(); }
-    btn.addEventListener('click', fire);
-    btn.addEventListener('touchstart', fire, { passive: false });
-  }
-
-  bindBtn('tetrisLeft',  function () {
-    if (!paused && !over && valid(piece.shape, piece.x - 1, piece.y)) piece.x--;
-  });
-  bindBtn('tetrisRight', function () {
-    if (!paused && !over && valid(piece.shape, piece.x + 1, piece.y)) piece.x++;
-  });
-  bindBtn('tetrisUp',    function () {
-    if (!paused && !over) { const r = rotate(piece.shape); if (valid(r, piece.x, piece.y)) piece.shape = r; }
-  });
-  bindBtn('tetrisDown',  function () {
-    if (!paused && !over && valid(piece.shape, piece.x, piece.y + 1)) { piece.y++; score += 1; updateStats(); }
-  });
-  bindBtn('tetrisSpace', function () {
-    if (!paused && !over) {
-      while (valid(piece.shape, piece.x, piece.y + 1)) { piece.y++; score += 2; }
-      place();
-      updateStats();
-    }
-  });
-
-  init();
-}());
-*/
 
 
 /* ============================================================
@@ -851,12 +617,13 @@
   if (!stage || !dotsEl) return;
 
   var CERTS = [
-    { title: 'Coursera — I',   src: 'Certificates/Coursera GHUQXCDUQVXF.pdf' },
-    { title: 'Coursera — II',  src: 'Certificates/Coursera JWEDX45FHD7Q.pdf' },
-    { title: 'Coursera — III', src: 'Certificates/Coursera KCHZMRDCYPQ3.pdf' },
-    { title: 'Coursera — IV',  src: 'Certificates/Coursera WTAZGFZLZZEU.pdf' },
-    { title: 'Credential',     src: 'Certificates/Sascha-Thompson-210f.pdf'   },
-    { title: 'Codecademy',     src: "Certificates/SaschaThompson's profile _ Codecademy.pdf" },
+    { title: 'Coursera — I',   src: 'documents/certificates/coursera-1.pdf'  },
+    { title: 'Coursera — II',  src: 'documents/certificates/coursera-2.pdf'  },
+    { title: 'Coursera — III', src: 'documents/certificates/coursera-3.pdf'  },
+    { title: 'Coursera — IV',  src: 'documents/certificates/coursera-4.pdf'  },
+    { title: 'Credential',     src: 'documents/certificates/credential.pdf'  },
+    { title: 'Codecademy',     src: 'documents/certificates/codecademy.pdf'  },
+    { title: 'Google AI',      src: 'documents/certificates/google-ai.pdf'   },
   ];
 
   var SPREAD_DEG    = 40;
@@ -881,6 +648,51 @@
   var tiltY  = 0;
 
   function wrap(n) { return ((n % LEN) + LEN) % LEN; }
+
+  // ── Lightbox (16.txt expand on click) ──────────────────────
+  var lightbox        = document.createElement('div');
+  lightbox.className  = 'cert-lightbox';
+
+  var lbContent       = document.createElement('div');
+  lbContent.className = 'cert-lightbox__content';
+
+  var lbIframe        = document.createElement('iframe');
+  lbIframe.className  = 'cert-lightbox__iframe';
+
+  var lbClose         = document.createElement('button');
+  lbClose.className   = 'cert-lightbox__close';
+  lbClose.innerHTML   = '&#x2715;';
+  lbClose.setAttribute('aria-label', 'Close');
+
+  lbContent.appendChild(lbIframe);
+  lbContent.appendChild(lbClose);
+  lightbox.appendChild(lbContent);
+  document.body.appendChild(lightbox);
+
+  function openLightbox(i) {
+    lbIframe.src = CERTS[i].src + '#toolbar=0&navpanes=0&scrollbar=0&view=Fit';
+    lightbox.classList.add('is-open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLightbox() {
+    lightbox.classList.remove('is-open');
+    document.body.style.overflow = '';
+    // Clear src after transition so PDF unloads cleanly
+    setTimeout(function () { lbIframe.src = ''; }, 300);
+  }
+
+  lbClose.addEventListener('click', function (e) {
+    e.stopPropagation();
+    closeLightbox();
+  });
+  // Click on backdrop (not content) closes
+  lightbox.addEventListener('click', function (e) {
+    if (e.target === lightbox) closeLightbox();
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') closeLightbox();
+  });
 
   function signedOff(i) {
     var raw = i - active;
@@ -979,6 +791,7 @@
       dragStart = null;
       if      (travel >  80) setActive(wrap(active - 1));
       else if (travel < -80) setActive(wrap(active + 1));
+      else if (Math.abs(travel) < 10) openLightbox(i);
     });
 
     // Touch swipe
@@ -993,6 +806,7 @@
       touchStart = null;
       if      (travel >  60) setActive(wrap(active - 1));
       else if (travel < -60) setActive(wrap(active + 1));
+      else if (Math.abs(travel) < 10) openLightbox(i);
     });
   });
 
@@ -1074,4 +888,17 @@
   stage.addEventListener('mouseleave', startAuto);
   dotsEl.addEventListener('mouseenter', stopAuto);
   dotsEl.addEventListener('mouseleave', startAuto);
+}());
+
+
+/* ============================================================
+   BACK TO TOP BUTTON
+   ============================================================ */
+
+(function () {
+  var btn = document.querySelector('.footer__back-btn');
+  if (!btn) return;
+  btn.addEventListener('click', function () {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
 }());

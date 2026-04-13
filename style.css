@@ -71,8 +71,8 @@
   padding: 0;
 }
 
-html {
-  scroll-behavior: smooth;
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
 }
 
 body {
@@ -100,6 +100,17 @@ a {
   text-decoration: none;
 }
 
+/* Keyboard focus indicator — visible only for keyboard navigation */
+:focus-visible {
+  outline: 2px solid var(--color-dark);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
 
 /* ------------------------------------------------------------
    3. SELECTION
@@ -108,6 +119,23 @@ a {
 ::selection {
   background: var(--color-accent);
   color: var(--color-dark);
+}
+
+/* Skip navigation — visually hidden until focused */
+.skip-nav {
+  position: absolute;
+  top: -100%;
+  left: 1rem;
+  padding: 0.5rem 1rem;
+  background: var(--color-dark);
+  color: var(--color-bg);
+  font-weight: 700;
+  border-radius: 4px;
+  z-index: 10000;
+  transition: top 0.2s;
+}
+.skip-nav:focus {
+  top: 1rem;
 }
 
 
@@ -605,7 +633,7 @@ section {
   font-family: 'Caveat', cursive;
   font-size: 1.8rem;
   font-weight: 700;
-  color: #1a1a1a;
+  color: var(--color-dark);
   transform: rotate(8deg);
   pointer-events: none;
   z-index: 2;
@@ -616,7 +644,7 @@ section {
   content: '';
   display: block;
   height: 2px;
-  background: #1a1a1a;
+  background: var(--color-dark);
   border-radius: 1px;
   margin-top: 1px;
   transform: rotate(-1deg);
@@ -797,6 +825,71 @@ section {
   background: var(--color-dark);
 }
 
+/* ── CERT LIGHTBOX ───────────────────────────────────────── */
+.cert-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  background: rgba(0, 0, 0, 0.82);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+.cert-lightbox.is-open {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.cert-lightbox__content {
+  position: relative;
+  width: min(88vw, 960px);
+  height: 90vh;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #fff;
+  transform: scale(0.9);
+  transition: transform 0.3s cubic-bezier(0.34, 1.2, 0.64, 1);
+  box-shadow: 0 40px 100px rgba(0, 0, 0, 0.55);
+}
+
+.cert-lightbox.is-open .cert-lightbox__content {
+  transform: scale(1);
+}
+
+.cert-lightbox__iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.cert-lightbox__close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 10;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(0, 0, 0, 0.45);
+  color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s ease;
+  backdrop-filter: blur(4px);
+}
+
+.cert-lightbox__close:hover {
+  background: rgba(0, 0, 0, 0.75);
+}
+
 /* POLAROID STRIP — zero-height overlay on section seam */
 .polaroid-strip {
   position: relative;
@@ -843,7 +936,7 @@ section {
   font-family: 'Caveat', cursive;
   font-size: 1.4rem;
   font-weight: 700;
-  color: #1a1a1a;
+  color: var(--color-dark);
   text-align: center;
   margin: 60px 0 0;
   transform: translate(500px, 50px) rotate(-6deg);
@@ -866,7 +959,7 @@ section {
   font-family: 'Caveat', cursive;
   font-size: 0.75rem;
   font-weight: 700;
-  color: #1a1a1a;
+  color: var(--color-dark);
   white-space: nowrap;
 }
 
@@ -874,8 +967,81 @@ section {
   font-family: 'Caveat', cursive;
   font-size: 0.65rem;
   font-weight: 400;
-  color: #1a1a1a;
+  color: var(--color-dark);
   white-space: nowrap;
+}
+
+/* Clickable when scattered */
+.polaroid-strip.is-scattered .polaroid-card {
+  pointer-events: all;
+  cursor: zoom-in;
+}
+
+/* ── PHOTO LIGHTBOX ──────────────────────────────────────── */
+.photo-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  background: rgba(0, 0, 0, 0.88);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+.photo-lightbox.is-open {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.photo-lightbox__img {
+  max-width: min(88vw, 780px);
+  max-height: 78vh;
+  object-fit: contain;
+  border-radius: 4px;
+  box-shadow: 0 40px 100px rgba(0, 0, 0, 0.6);
+  transform: scale(0.9);
+  transition: transform 0.3s cubic-bezier(0.34, 1.2, 0.64, 1);
+}
+
+.photo-lightbox.is-open .photo-lightbox__img {
+  transform: scale(1);
+}
+
+.photo-lightbox__caption {
+  font-family: 'Caveat', cursive;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.85);
+  text-align: center;
+  letter-spacing: 0.02em;
+}
+
+.photo-lightbox__close {
+  position: fixed;
+  top: 18px;
+  right: 18px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s ease;
+  backdrop-filter: blur(4px);
+}
+
+.photo-lightbox__close:hover {
+  background: rgba(255, 255, 255, 0.3);
 }
 
 /* Scattered positions set dynamically by JS */
@@ -1205,7 +1371,9 @@ section {
 
 /* Hide mobile-only elements on desktop */
 .hamburger-btn,
-.mobile-menu {
+.mobile-menu,
+.mobile-hero-splash,
+.footer__mobile-contact {
   display: none;
 }
 
@@ -1298,8 +1466,15 @@ section {
     overflow-x: hidden;
   }
 
-  /* Accordion — hidden on mobile, replaced by hamburger */
+  /* Accordion — hidden on mobile */
   .nav__accordion {
+    display: none !important;
+  }
+
+  /* Hamburger + mobile menu — not used on mobile (simple splash instead) */
+  .hamburger-btn,
+  .mobile-menu,
+  .mobile-menu.is-open {
     display: none !important;
   }
 
@@ -1307,85 +1482,55 @@ section {
     overflow: hidden;
   }
 
-  /* Hamburger button */
-  .hamburger-btn {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    justify-content: center;
-    align-items: center;
-    position: absolute;
-    top: 1.25rem;
-    right: 1.25rem;
-    width: 40px;
-    height: 40px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    z-index: 200;
-    padding: 0;
-  }
-  .hamburger-btn span {
-    display: block;
-    width: 26px;
-    height: 2px;
-    background: #f85a41;
-    border-radius: 2px;
+  /* Hide desktop hero content on mobile */
+  .hero__inner,
+  .hero__hint {
+    display: none !important;
   }
 
-  /* Mobile full-screen menu */
-  .mobile-menu {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: #ede9e1;
-    z-index: 300;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
-  .mobile-menu.is-open {
+  /* ── Mobile hero splash ─────────────────────────────────── */
+  .mobile-hero-splash {
     display: flex;
-  }
-  .mobile-menu__close {
-    position: absolute;
-    top: 1.25rem;
-    right: 1.25rem;
-    background: none;
-    border: none;
-    font-size: 24px;
-    color: #f85a41;
-    cursor: pointer;
-    font-weight: 700;
-    line-height: 1;
-  }
-  .mobile-menu__link {
-    font-size: 32px;
-    font-weight: 700;
-    color: #f85a41;
-    text-decoration: none;
-    padding: 20px 0;
-    display: block;
-    text-align: center;
-  }
-
-  /* Hero */
-  .hero__inner {
+    flex-direction: column;
+    gap: 2rem;
     padding: 3.5rem var(--space-side-padding) 3rem;
   }
 
-  .hero__top {
-    margin-bottom: 1.5rem;
+  .mobile-hero__name {
+    font-size: var(--font-s-h1);
+    line-height: var(--font-lh-h1);
+    letter-spacing: var(--font-ls-h1);
+    font-weight: 700;
+    color: var(--color-accent);
   }
 
-  .hero__name {
-    font-size: clamp(48px, 12vw, 6.67vw);
-    width: 100%;
+  .mobile-hero__desc {
+    font-size: var(--font-s-p1);
+    line-height: var(--font-lh-p1);
+    color: var(--color-mid);
+    max-width: 30ch;
   }
 
-  .hero__descriptor {
-    font-size: 1rem;
-    max-width: 100%;
+  .mobile-hero__brands {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .mobile-hero__brand-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.25rem 1.5rem;
+    align-items: center;
+  }
+
+  .m-brand {
+    height: 28px;
+    width: auto;
+    max-width: 90px;
+    object-fit: contain;
+    filter: url(#logo-orange);
+    opacity: 0.7;
   }
 
   /* Sections */
@@ -1482,6 +1627,65 @@ section {
 
   .footer__links {
     gap: 1rem;
+  }
+
+  /* ── Hide sections on mobile ───────────────────────────── */
+  #work,
+  .resume__float,
+  #code,
+  .polaroid-strip,
+  .polaroid-label,
+  #about,
+  #contact {
+    display: none !important;
+  }
+
+  /* ── Mobile footer contact button ──────────────────────── */
+  .footer__mobile-contact {
+    display: flex;
+    justify-content: center;
+    padding: 1.5rem var(--space-side-padding) 1rem;
+    border-top: 1px solid var(--color-accent);
+    width: 100%;
+  }
+
+  .footer__contact-btn {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--color-bg);
+    background: var(--color-accent);
+    padding: 0.75rem 2.5rem;
+    border-radius: 100px;
+    text-decoration: none;
+    letter-spacing: 0.03em;
+  }
+}
+
+
+/* ------------------------------------------------------------
+   REDUCED MOTION — respect user system preference
+   ------------------------------------------------------------ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* Bouncing dots: freeze in place */
+  .bouncing-dots .dot {
+    animation: none;
+    transform: none;
+  }
+
+  /* PS note draw-on: show immediately without animation */
+  .ps-note {
+    opacity: 1 !important;
+    clip-path: none !important;
   }
 }
 
